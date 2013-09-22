@@ -1,0 +1,3 @@
+[submodule "constitution"]
+	path = constitution
+	url = git@bitbucket.org:ritscc/constitution.git
