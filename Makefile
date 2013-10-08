@@ -8,12 +8,18 @@ OUTPUT_DIR = build
 BUILDED_TARGET = $(OUTPUT_DIR)/$(TARGET)
 
 BRANCH = HEAD
+SUBMODULE_BRANCH = develop
+
 all: $(BUILDED_TARGET).dvi
 
 pdf: $(BUILDED_TARGET).pdf
 
 git:
 	git checkout $(BRANCH)
+
+	git submodule init
+	git submodule update
+	git submodule foreach 'git checkout $(SUBMODULE_BRANCH)'
 
 $(BUILDED_TARGET).dvi: $(TARGET).tex git
 	mkdir -p $(OUTPUT_DIR)
