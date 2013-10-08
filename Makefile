@@ -7,11 +7,15 @@ TARGET = document
 OUTPUT_DIR = build
 BUILDED_TARGET = $(OUTPUT_DIR)/$(TARGET)
 
+BRANCH = HEAD
 all: $(BUILDED_TARGET).dvi
 
 pdf: $(BUILDED_TARGET).pdf
 
-$(BUILDED_TARGET).dvi: $(TARGET).tex
+git:
+	git checkout $(BRANCH)
+
+$(BUILDED_TARGET).dvi: $(TARGET).tex git
 	mkdir -p $(OUTPUT_DIR)
 	$(PLATEX) -interaction=nonstopmode -output-directory=$(OUTPUT_DIR) $(TARGET).tex
 	$(PLATEX) -interaction=nonstopmode -output-directory=$(OUTPUT_DIR) $(TARGET).tex
