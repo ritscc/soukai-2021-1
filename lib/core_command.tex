@@ -10,6 +10,8 @@
 \def\titles{}
 \def\zenki{}
 \def\kouki{}
+\def\newGradeIfKouki{}
+\def\declnewGradeIfKouki{}
 
 \renewcommand{\year}[1]{\renewcommand{\valyear}{#1}}
 \renewcommand{\heisei}[1]{\renewcommand{\valheisei}{#1}}
@@ -18,6 +20,8 @@
 \renewcommand{\kai}[1]{\renewcommand{\valkai}{#1}}
 
 \renewcommand{\declcontents}[1]{\renewcommand{\contents}{\input{#1}}}
+
+\renewcommand{\declnewGradeIfKouki}[1]{\renewcommand{\newGradeIfKouki}{#1}}
 
 \renewcommand{\titles}{
   \title{{\Huge \valyear{}年度第\valkai{}回RCC総会\\議案書}}
@@ -31,6 +35,7 @@
 
 \renewcommand{\kouki}{
   \kai{二}
+  \declnewGradeIfKouki{新}
   \declcontents{src/kouki.tex}
 }
 
