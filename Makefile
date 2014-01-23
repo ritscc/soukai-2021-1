@@ -12,12 +12,12 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 # for Linux
 
-    PDF_READER = evince
+  PDF_READER = evince
 endif
 ifeq ($(UNAME_S),Darwin)
 # for MacOSX
 
-	PDF_READER = open
+  PDF_READER = open
 endif
 
 all: $(BUILDED_TARGET).dvi
