@@ -1,14 +1,24 @@
 PLATEX = platex
 DVIPDFMX = dvipdfmx
 
-PDF_READER = evince
-
 TARGET = document
 OUTPUT_DIR = build
 BUILDED_TARGET = $(OUTPUT_DIR)/$(TARGET)
 
 BRANCH = HEAD
 SUBMODULE_BRANCH = master
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+# for Linux
+
+  PDF_READER = evince
+endif
+ifeq ($(UNAME_S),Darwin)
+# for MacOSX
+
+  PDF_READER = open
+endif
 
 all: $(BUILDED_TARGET).dvi
 
