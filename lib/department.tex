@@ -21,6 +21,10 @@
 \def\systemDepartment{}
 \def\systemChief{}
 \def\systemStaff{}
+\def\soumu{}
+\def\soumuDepartment{}
+\def\soumuChief{}
+\def\soumuStaff{}
 
 \renewcommand{\department}{局}
 \renewcommand{\departmentOf}[1]{#1\department}
@@ -49,3 +53,8 @@
 \renewcommand{\systemDepartment}{\departmentOf{\system}}
 \renewcommand{\systemChief}{\chiefOf{\systemDepartment}}
 \renewcommand{\systemStaff}{\staffOf{\systemDepartment}}
+
+\renewcommand{\soumu}{総務}
+\renewcommand{\soumuDepartment}{\departmentOf{\soumu}}
+\renewcommand{\soumuChief}{\chiefOf{\soumuDepartment}}
+\renewcommand{\soumuStaff}{\staffOf{\soumuDepartment}}
