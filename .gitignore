@@ -1,1 +1,229 @@
 build/
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Tex.gitignore
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+
+## Intermediate documents:
+*.dvi
+*-converted-to.*
+# these rules might exclude image files for figures etc.
+# *.ps
+# *.eps
+# *.pdf
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.brf
+*.run.xml
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+## Auxiliary and intermediate files from other packages:
+
+# algorithms
+*.alg
+*.loa
+
+# amsthm
+*.thm
+
+# beamer
+*.nav
+*.snm
+*.vrb
+
+#(e)ledmac/(e)ledpar
+*.end
+*.[1-9]
+*.[1-9][0-9]
+*.[1-9][0-9][0-9]
+*.[1-9]R
+*.[1-9][0-9]R
+*.[1-9][0-9][0-9]R
+*.eledsec[1-9]
+*.eledsec[1-9]R
+*.eledsec[1-9][0-9]
+*.eledsec[1-9][0-9]R
+*.eledsec[1-9][0-9][0-9]
+*.eledsec[1-9][0-9][0-9]R
+
+# glossaries
+*.acn
+*.acr
+*.glg
+*.glo
+*.gls
+
+# hyperref
+*.brf
+
+# listings
+*.lol
+
+# makeidx
+*.idx
+*.ilg
+*.ind
+*.ist
+
+# minitoc
+*.maf
+*.mtc
+*.mtc0
+
+# minted
+*.pyg
+
+# morewrites
+*.mw
+
+# nomencl
+*.nlo
+
+# sagetex
+*.sagetex.sage
+*.sagetex.py
+*.sagetex.scmd
+
+# sympy
+*.sout
+*.sympy
+sympy-plots-for-*.tex/
+
+# todonotes
+*.tdo
+
+# xindy
+*.xdy
+
+
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Global/vim.gitignore
+
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Global/Emacs.gitignore
+
+# -*- mode: gitignore; -*-
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
+
+# flymake-mode
+*_flymake.*
+
+# eshell files
+/eshell/history
+/eshell/lastdir
+
+# elpa packages
+/elpa/
+
+# reftex files
+*.rel
+
+# AUCTeX auto folder
+/auto/
+
+
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Global/Windows.gitignore
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Global/Linux.gitignore
+
+*~
+
+# KDE directory preferences
+.directory
+
+
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Global/OSX.gitignore
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+### https://raw.github.com/github/gitignore/298588469ac0cb08a00eebf7b00efb5ab726daca/Global/SublimeText.gitignore
+
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# workspace files are user-specific
+*.sublime-workspace
+
+# project files should be checked into the repository, unless a significant
+# proportion of contributors will probably not be using SublimeText
+# *.sublime-project
+
+# sftp configuration file
+sftp-config.json
+
+
