@@ -54,18 +54,26 @@ def create_files
 
     ARGV[3..-1].each do |file|
       subsection_file = "src/#{ARGV[1]}/#{ARGV[2]}/#{file}.tex"
-      puts(subsection_file)
-      subsection = get_value('小節名', '')
-      family = get_value('苗字', '')
-      name = get_value('名前', '')
-      line = ["\\subsection*{#{subsection}}"]
-      positions.each do |pos|
-        line.push("%\\writtenBy{#{pos}}{#{family}}{#{name}}")
-      end
+      if File.exist?(subsection_file)
+        puts("#{subsection_file} is exist.")
+      else
+        puts(subsection_file)
+        subsection = get_value('小節名', '')
+        family = get_value('苗字', '')
+        name = get_value('名前', '')
+        line = ["\\subsection*{#{subsection}}"]
+        positions.each do |pos|
+          line.push("%\\writtenBy{#{pos}}{#{family}}{#{name}}")
+        end
 
-      File.write(subsection_file, line.join("\n"))
-      File.open(section_file, 'a') do |file|
-        file.puts("\\input{#{subsection_file}}")
+        File.write(subsection_file, line.join("\n"))
+
+        s = File.read(section_file, :encoding => Encoding::UTF_8)
+        unless s =~ /#{subsection_file}/
+            File.open(section_file, 'a') do |file|
+            file.puts("\\input{#{subsection_file}}")
+          end
+        end
       end
     end
     return 0
