@@ -1,9 +1,9 @@
 
 \documentclass[a4j,titlepage]{jarticle}
 
-\input{lib/packages.tex}
-
-\input{lib/core_command.tex}
+\input{tex-commands/root.tex}
+\texCommandsRoot{tex-commands}
+\inputCommandsAll
 
 \year{#[current_year]}
 \heisei{#[heisei]}

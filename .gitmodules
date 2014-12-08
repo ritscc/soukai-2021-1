@@ -1,3 +1,6 @@
 [submodule "constitution"]
 	path = constitution
 	url = git@bitbucket.org:ritscc/constitution.git
+[submodule "tex-commands"]
+	path = tex-commands
+	url = git@bitbucket.org:ritscc/tex-commands
