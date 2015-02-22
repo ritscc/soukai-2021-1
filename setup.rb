@@ -39,7 +39,7 @@ def create_files
     section_file = "./src/#{ARGV[1]}/#{ARGV[2]}.tex"
     case ARGV[2]
     when 'zentai'
-      positions = ['\firstGrade', '\secondGrade', '\thirdGrade', '\forthGrade']
+      positions = ['\president', '\subPresident', '\firstGrade', '\secondGrade', '\thirdGrade', '\forthGrade']
     when 'kaikei'
       positions = ['\kaikeiChief', '\kaikeiStaff']
     when 'kensui'
