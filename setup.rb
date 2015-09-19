@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 # Macだとこれしないといけない可能性 http://qiita.com/kidachi_/items/d0137d96bed9ac381fd5
 
 require "readline"
@@ -7,27 +6,32 @@ require "yaml"
 require "net/https"
 require "io/console"
 
-# 種別ごとに肩書きを生成
+# 種別ごとに文責を生成
 # nilやどれにも当てはまらなければ, デフォルトを返す
-def generate_position(type)
-  case type
-  when 'kaikei'
-    positions = ['\kaikeiChief', '\kaikeiStaff']
-  when 'kensui'
-    positions = ['\kensuiChief', '\kensuiStaff']
-  when 'syogai'
-    positions = ['\syogaiChief', '\syogaiStaff']
-  when 'system'
-    positions = ['\systemChief', '\systemStaff']
-  when 'soumu'
-    positions = ['\soumuChief', '\soumuStaff']
-  else
-    positions = ['\president', '\subPresident', '\firstGrade', '\secondGrade', '\thirdGrade', '\forthGrade']
+def generate_position(section)
+  case section
+  when 'kaikei' then ['\kaikeiChief', '\kaikeiStaff']
+  when 'kensui' then ['\kensuiChief', '\kensuiStaff']
+  when 'syogai' then ['\syogaiChief', '\syogaiStaff']
+  when 'system' then ['\systemChief', '\systemStaff']
+  when 'soumu'  then ['\soumuChief', '\soumuStaff']
+  else               ['\president', '\subPresident', '\firstGrade', '\secondGrade', '\thirdGrade', '\forthGrade']
   end
-  return positions
 end
 
-# 
+# 文責の生成
+def add_positions(lines, info, section = nil)
+  return nil unless lines.is_a?(Array)
+
+  positions = generate_position(section)
+  assignee = (info && info[:assignee]) || {family: "xxxx", name: "xxxx"}
+
+  positions.each do |pos|
+    lines.push("%\\writtenBy{#{pos}}{#{assignee[:family]}}{#{assignee[:name]}}")
+  end
+end
+
+# ファイルパス（./src/〜.tex）の存在を確認する
 def check_file_exists?(filepath)
   subsection_file = "./src/#{filepath}.tex"
 
@@ -39,22 +43,21 @@ end
 
 # 指定のパスのファイルを生成する
 def create_file(filepath, info)
-  match = filepath.match(%r{^([^/]+)/([^/]+)/(.+)$})
-  if match
+  # 普通のパスで指定できるもの
+  if match = filepath.match(%r{^([^/]+)/([^/]+)/(.+)$})
+    # 正規表現による切り出し
     type = match[1]; section = match[2]; subsection = match[3];
     section_file = "./src/#{type}/#{section}.tex"
     subsection_file = "./src/#{filepath}.tex"
 
     return if check_file_exists?(filepath)
 
-    assignee = info[:assignee] || {family: "", name: ""}
-    positions = generate_position(type)
-    line = ["\\subsection*{#{info[:title]}}"]
-    positions.each do |pos|
-      line.push("%\\writtenBy{#{pos}}{#{assignee[:family]}}{#{assignee[:name]}}")
-    end
+    # 文責の生成
+    lines = ["\\subsection*{#{info[:title]}}"]
+    add_positions(lines, info, section)
+
     # ファイルを生成し、書き込みを行う
-    File.write(subsection_file, line.join("\n"))
+    File.write(subsection_file, lines.join("\n"))
 
     # section_fileにinputが書かれていなかったら、追加
     s = File.read(section_file, :encoding => Encoding::UTF_8)
@@ -63,15 +66,18 @@ def create_file(filepath, info)
         file.puts("\\input{#{subsection_file}}")
       end
     end
+  # 回生別総括の場合
   elsif filepath =~ %r{/[1234]kai$}
     puts("warning: '#{filepath}' will be changed.")
     type = nil;
     subsection_file = "./src/#{filepath}.tex"
-    if File.exist?(subsection_file) && assignee = info[:assignee]
+    if File.exist?(subsection_file) && assignee = info[:assignee] # assigneeが空の場合は作成されない.
       s = File.read(subsection_file, :encoding => Encoding::UTF_8)
-      s.gsub!("\writtenBy{役職}{姓}{名}", "\writtenBy{}{#{assignee[:family]}}{#{assignee[:name]}}")
+      s.gsub!('\writtenBy{役職}{姓}{名}', '') # 該当行の削除
+      lines = []
+      add_positions(lines, info)
+      s << lines.join("\n") << "\n"
       File.write(subsection_file, s)
-    else
     end
   else
     puts("unsupported file path.")
