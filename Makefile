@@ -3,6 +3,7 @@ DVIPDFMX = dvipdfmx
 
 TARGET = document
 OUTPUT_DIR = build
+SRC_DIR = src
 BUILDED_TARGET = $(OUTPUT_DIR)/$(TARGET)
 
 BRANCH = HEAD
@@ -48,3 +49,5 @@ clean:
 open: $(BUILDED_TARGET).pdf
 	$(PDF_READER) $(BUILDED_TARGET).pdf &
 
+test:
+	find $(SRC_DIR) -name "*.tex" | xargs ruby ta9boh/ta9boh.rb $(OPTION)

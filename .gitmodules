@@ -4,3 +4,6 @@
 [submodule "tex-commands"]
 	path = tex-commands
 	url = git@bitbucket.org:ritscc/tex-commands
+[submodule "ta9boh"]
+	path = ta9boh
+	url = git@bitbucket.org:ritscc/ta9boh.git
