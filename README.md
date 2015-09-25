@@ -158,7 +158,7 @@ $ make pdf
 * 一回生 `\firstGrade`
 * 二回生 `\secondGrade`
 * 三回生 `\thirdGrade`
-* 四回生 `\forthGrade`
+* 四回生 `\fourthGrade`
 
 * 文責：x y z `\writtenBy{x}{y}{z}`
 
