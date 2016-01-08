@@ -197,6 +197,10 @@ Macではreadlineをインストールする必要があるかもしれません
 $ ruby setup.rb init
 ```
 
+WerckerのShare Badgeが最後に聞かれます．Werckerで継続的インテグレーションの設定を行っている場合に利用できます．
+WerckerのShare Badge (Markdown表記) は，Werckerのアプリケーション別の設定ページから，左メニューの「Sharing」をクリックすると見つけることができます．
+Werckerをまだ使っていない場合は空欄にしておいてください．後からでも変更ができます．
+
 ### generateコマンド
 subsection以降を書くファイルを生成します．
 それと同時に`\input`コマンドもファイルに追記します．
@@ -209,3 +213,8 @@ subsection以降を書くファイルを生成します．
 $ ruby setup.rb generate soukatsu zentai welcome group hackathon
 $ ruby setup.rb generate houshin syogai kc3 webpage
 ```
+
+Werckerについて
+-----------------------
+継続的インテグレーションを支援するサービス Werckerを用いて，総会文書のビルドを自動化しています．
+WerckerやWerckerのセットアップ方法については，`README_CI.md`に詳しく紹介していますので，興味がある方やセットアップ担当者はぜひご覧ください．

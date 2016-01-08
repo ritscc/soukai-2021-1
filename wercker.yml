@@ -14,11 +14,14 @@ build:
             fingerprint: '97:8c:1b:f2:6f:14:6b:5c:3b:ec:aa:46:46:74:7c:40'
             type: rsa
         - script:
-            name: 'submodule setup'
+            name: 'setup submodule'
             code: 'git submodule update --init --recursive'
         - script:
             name: 'building a pdf'
             code: 'make pdf'
+        - script:
+            name: 'testing with ta9boh'
+            code: 'make test'
 deploy:
     steps:
         - install-packages:
