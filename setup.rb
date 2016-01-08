@@ -15,7 +15,7 @@ def generate_position(section)
   when 'syogai' then ['\syogaiChief', '\syogaiStaff']
   when 'system' then ['\systemChief', '\systemStaff']
   when 'soumu'  then ['\soumuChief', '\soumuStaff']
-  else               ['\president', '\subPresident', '\firstGrade', '\secondGrade', '\thirdGrade', '\forthGrade']
+  else               ['\president', '\subPresident', '\firstGrade', '\secondGrade', '\thirdGrade', '\fourthGrade']
   end
 end
 
