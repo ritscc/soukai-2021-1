@@ -193,6 +193,7 @@ def set_replace_word(list)
   list[:ordinal] = get_value('第何回目?', ((4..9).include?(t.month) ? 1 : 2))
   list[:ordinal_kanji] = (list[:ordinal].to_i == 1 ? '一' : '二')
   list[:semester] = (list[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
+  list[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
 end
 
 def replace_text(file, list)
