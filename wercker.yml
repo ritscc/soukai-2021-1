@@ -4,8 +4,8 @@ box: hiono/texlive
 build:
     steps:
         - install-packages:
-            name: 'install git & make'
-            packages: 'git make'
+            name: 'install git & make & ruby'
+            packages: 'git make ruby'
         - add-ssh-key:
             keyname: 'KEY_FOR_SUBMODULE'
             host: 'bitbucket.org'
