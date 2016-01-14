@@ -3,6 +3,13 @@
 これは，#[current_year]年度第#[ordinal_kanji]回総会議案書リポジトリです．
 文書は，LaTeXを用いて執筆します．
 
+ビルドステータス
+-----------------------
+Werckerを用いて，総会文書のビルドを自動化しています．
+生成されたPDFは，[Slackの総会チャンネル](https://ritscc.slack.com/messages/soukai/)にアップロードされます．
+
+ #[wercker_badge]
+
 文章表現について
 -----------------------
 文章表現について統一表記をここに示します．落ち着いた時にでもいい感じのところに書きなおしてください．
@@ -190,6 +197,10 @@ Macではreadlineをインストールする必要があるかもしれません
 $ ruby setup.rb init
 ```
 
+WerckerのShare Badgeが最後に聞かれます．Werckerで継続的インテグレーションの設定を行っている場合に利用できます．
+WerckerのShare Badge (Markdown表記) は，Werckerのアプリケーション別の設定ページから，左メニューの「Sharing」をクリックすると見つけることができます．
+Werckerをまだ使っていない場合は空欄にしておいてください．後からでも変更ができます．
+
 ### generateコマンド
 subsection以降を書くファイルを生成します．
 それと同時に`\input`コマンドもファイルに追記します．
@@ -202,3 +213,8 @@ subsection以降を書くファイルを生成します．
 $ ruby setup.rb generate soukatsu zentai welcome group hackathon
 $ ruby setup.rb generate houshin syogai kc3 webpage
 ```
+
+Werckerについて
+-----------------------
+継続的インテグレーションを支援するサービス Werckerを用いて，総会文書のビルドを自動化しています．
+WerckerやWerckerのセットアップ方法については，`README_CI.md`に詳しく紹介していますので，興味がある方やセットアップ担当者はぜひご覧ください．
