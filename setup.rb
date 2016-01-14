@@ -5,6 +5,7 @@ require "readline"
 require "yaml"
 require "net/https"
 require "io/console"
+require 'erb'
 
 # 種別ごとに文責を生成
 # nilやどれにも当てはまらなければ, デフォルトを返す
@@ -181,29 +182,27 @@ def get_value(msg, default)
   return s.empty? ? default : s
 end
 
-def set_replace_word(list)
+def init_repo
   t = Time.now
+  words = {}
 
-  list[:current_year] = get_value('開催年度', t.year - (t.month < 4 ? 1 : 0))
-  list[:last_year] = list[:current_year].to_i - 1
-  list[:next_year] = list[:current_year].to_i + 1
-  list[:heisei] = list[:current_year].to_i - 1988
-  list[:month] = get_value('開催月', t.month)
-  list[:day] = get_value('開催日', t.day)
-  list[:ordinal] = get_value('第何回目?', ((4..9).include?(t.month) ? 1 : 2))
-  list[:ordinal_kanji] = (list[:ordinal].to_i == 1 ? '一' : '二')
-  list[:semester] = (list[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
-  list[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
-end
+  words[:current_year] = get_value('開催年度', t.year - (t.month < 4 ? 1 : 0))
+  words[:last_year] = words[:current_year].to_i - 1
+  words[:next_year] = words[:current_year].to_i + 1
+  words[:heisei] = words[:current_year].to_i - 1988
+  words[:month] = get_value('開催月', t.month)
+  words[:day] = get_value('開催日', t.day)
+  words[:ordinal] = get_value('第何回目?', ((4..9).include?(t.month) ? 1 : 2))
+  words[:ordinal_kanji] = (words[:ordinal].to_i == 1 ? '一' : '二')
+  words[:semester] = (words[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
+  words[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
+  words[:repo_name] = "soukai-#{words[:current_year]}-#{words[:ordinal]}"
 
-def replace_text(file, list)
-  s = File.read(file, :encoding => Encoding::UTF_8)
+  readme = ERB.new(File.read('template/README.md.erb'))
+  File.write('README.md', readme.result(binding))
 
-  list.each{ |key, val|
-    s.gsub!("#[#{key}]", val.to_s);
-  }
-
-  File.write(file, s)
+  tex = ERB.new(File.read('template/document.tex.erb'))
+  File.write('document.tex', tex.result(binding))
 end
 
 def create_files
@@ -318,11 +317,7 @@ end
 
 case ARGV[0]
 when 'i', 'init'
-  list = { }
-  set_replace_word(list)
-
-  replace_text("document.tex", list)
-  replace_text("README.md", list)
+  init_repo
 when 'g', 'generate'
   print_help unless create_files
 when 'l', 'yaml-latex'

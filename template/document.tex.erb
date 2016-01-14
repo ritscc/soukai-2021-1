@@ -1,16 +1,15 @@
-
 \documentclass[a4j,titlepage]{jarticle}
 
 \input{tex-commands/root.tex}
 \texCommandsRoot{tex-commands}
 \inputCommandsAll
 
-\year{#[current_year]}
-\heisei{#[heisei]}
-\month{#[month]}
-\day{#[day]}
+\year{<%= "#{words[:current_year]}" %>}
+\heisei{<%= "#{words[:heisei]}" %>}
+\month{<%= "#{words[:month]}" %>}
+\day{<%= "#{words[:day]}" %>}
 
-#[semester]
+<%= "#{words[:semester]}" %>
 %\zenki
 %\kouki
 
