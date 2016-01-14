@@ -36,8 +36,8 @@ Werckerの特徴は，非常に柔軟性が高いことです．
 #### 1. 前準備
 1. Bitbucketのアカウントはお持ちでしょうか？ まだなら，システム管理局に作ってもらうように頼みましょう．
 2. BitbucketのRCCチームには参加できていますか？ まだなら，システム管理局に招待するように頼みましょう．
-3. Bitbucketの総会リポジトリは，作成済みですか？ まだであれば，soukai-templateをフォークして新たな総会リポジトリを作りましょう．総会リポジトリの名前は，例年のフォーマットに従うと良いでしょう．
-4. Bitbucketのチームの管理権限は設定されていますか？ まだであれば，システム管理局に設定してもらうように頼むか，システム管理局に当該作業を代行してもらいましょう．
+3. Bitbucketの総会リポジトリは，作成済みですか？ まだであれば，soukai-templateをフォークして新たな総会リポジトリを作りましょう．総会リポジトリの名前は，例年のフォーマット (soukai-XXXX-X) に従うと良いでしょう．
+4. Bitbucketの管理権限を持っていますか？ まだであれば，システム管理局に設定してもらうように頼むか，システム管理局に当該作業を代行してもらいましょう．
 5. WerckerのRCCのOrganizationに参加します．前担当者や執行委員長に招待するように頼みましょう．
 6. Slackの[Botユーザ](https://ritscc.slack.com/apps/manage/custom-integrations)のアクセストークンを確認します．Slackへの通知には，`wercker`を使用しています．アクセストークンがわからない場合は，新しくBotを作成する必要があります．古いものは削除しておくと良いでしょう（要管理者権限？）．アクセストークンをいつでもコピーできるようにしておいてください．
 
@@ -62,14 +62,14 @@ WerckerでSSHキーを生成して，それをBitbucketに登録する手順を�
 3. "Generate new keypair"をクリックしてSSHキーを生成します．Nameの入力欄には，`for_sub_module`と入力します．
 4. "Generate"ボタンをクリックして，SSHキーを生成します．
 5. "Public key"の表記の下に，SSHパブリックキーが表示されます．これをコピーしておいてください．
-6. [BitbucketのSSHキー設定ページ](https://bitbucket.org/account/user/ritscc/ssh-keys/)を開きます． 
-	この作業には，Bitbucketのシステム管理権限が必要です．権限がない場合は，システム管理局に作業代行頼むか，1.4の項目を実施してください．
-7. "鍵を追加"ボタンを押すと，SSHキーの追加ウィンドウが表示されます．
-8. "Label"に`RCC Wercker for soukai-XXXX-X`(XXXXの部分は読み替えてください)と入力し，"Key"入力欄に先ほどコピーしておいたパブリックキーをペーストします．入力が終わったら，鍵を追加ボタンを押します．
-9. Werckerの管理ページに戻り，左メニューの"Environment variables"をクリックします．
-10. "Add new variable"ボタンをクリックします．
-11. "name"入力欄に`KEY_FOR_SUBMODULE`と入力し，2つの選択ボタンの2番目の"SSH key pair"を選択．"Select a key pair"では，先ほど追加した`for_sub_module`を選択します．
-12. "Save"ボタンをクリックして，設定を反映させます．
+6. `ritscc_deploy`ユーザでログインします．ログイン方法はWikiに載っています．また，前任者やシステム管理局に聞いても分かるでしょう．
+7. [Bitbucketのritscc\_deployユーザのSSHキー設定ページ](https://bitbucket.org/account/user/ritscc_deploy/ssh-keys/)を開きます．
+8. "鍵を追加"ボタンを押すと，SSHキーの追加ウィンドウが表示されます．
+9. "Label"に`RCC Wercker for soukai-XXXX-X (for submodule)`(XXXXの部分は読み替えてください)と入力し，"Key"入力欄に先ほどコピーしておいたパブリックキーをペーストします．入力が終わったら，鍵を追加ボタンを押します．
+10. Werckerの管理ページに戻り，左メニューの"Environment variables"をクリックします．
+11. "Add new variable"ボタンをクリックします．
+12. "name"入力欄に`KEY_FOR_SUBMODULE`と入力し，2つの選択ボタンの2番目の"SSH key pair"を選択．"Select a key pair"では，先ほど追加した`for_sub_module`を選択します．
+13. "Save"ボタンをクリックして，設定を反映させます．
 
 #### 4. デプロイ設定
 デプロイとは，英語で「展開」「配置」を意味し，CIでいうとビルドしたソフトウェアを利用可能な状態に自動構成することをいいます．
