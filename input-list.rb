@@ -25,12 +25,3 @@ when 'not-input'
   puts '以下のファイルがinputされていません'
   puts (exists_list(src_dir) - input_list(src_dir, log_file)).join("\n")
 end
-
-
-=begin
-list = []
-while line = gets
-  list.concat((line.chomp.scan %r{\(\./(src/.*?\.tex)}).flatten)
-end
-puts list.join("\n")
-=end
