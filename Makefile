@@ -51,5 +51,5 @@ open: $(BUILDED_TARGET).pdf
 
 test:
 	$(PLATEX) -interaction=nonstopmode -output-directory=$(OUTPUT_DIR) $(TARGET).tex
-	ruby input-list.rb input $(SRC_DIR) $(BUILDED_TARGET).log | xargs ruby ta9boh/ta9boh.rb $(OPTION)
-	ruby input-list.rb not-input $(SRC_DIR) $(BUILDED_TARGET).log
+	ruby tools/input-list.rb input $(SRC_DIR) $(BUILDED_TARGET).log | xargs ruby ta9boh/ta9boh.rb $(OPTION)
+	ruby tools/input-list.rb not-input $(SRC_DIR) $(BUILDED_TARGET).log
