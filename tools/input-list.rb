@@ -22,6 +22,10 @@ case command
 when 'input'
   puts input_list(src_dir, log_file).join("\n")
 when 'not-input'
-  puts '以下のファイルがinputされていません'
-  puts (exists_list(src_dir) - input_list(src_dir, log_file)).join("\n")
+  not_input_list = exists_list(src_dir) - input_list(src_dir, log_file)
+  unless not_input_list.empty?
+    puts '以下のファイルがinputされていません'
+    puts not_input_list.join("\n")
+    exit(1)
+  end
 end
