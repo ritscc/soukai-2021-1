@@ -17,11 +17,11 @@ build:
             name: 'setup submodule'
             code: 'git submodule update --init --recursive'
         - script:
-            name: 'testing with ta9boh'
-            code: 'make test'
-        - script:
             name: 'building a pdf'
             code: 'make pdf'
+        - script:
+            name: 'testing with ta9boh'
+            code: 'make test'
 deploy:
     steps:
         - install-packages:
