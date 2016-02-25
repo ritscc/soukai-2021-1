@@ -185,6 +185,10 @@ end
 def init_repo
   t = Time.now
   words = {}
+  rm_list = [
+    %w(src/houshin/4kai.tex src/kouki.tex),
+    %w(src/houshin/1kai.tex src/soukatsu/4kai.tex src/zenki.tex)
+  ]
 
   words[:current_year] = get_value('開催年度', t.year - (t.month < 4 ? 1 : 0))
   words[:last_year] = words[:current_year].to_i - 1
@@ -203,6 +207,10 @@ def init_repo
 
   tex = ERB.new(File.read('template/document.tex.erb'))
   File.write('document.tex', tex.result(binding))
+
+  rm_list[words[:ordinal] - 1].each do |file_name|
+    File.delete file_name
+  end
 end
 
 def create_files
