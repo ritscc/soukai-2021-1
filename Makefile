@@ -21,6 +21,8 @@ ifeq ($(UNAME_S),Darwin)
   PDF_READER = open
 endif
 
+LOG_LEVEL = 3
+
 all: $(BUILDED_TARGET).dvi
 
 pdf: $(BUILDED_TARGET).pdf
@@ -51,5 +53,5 @@ open: $(BUILDED_TARGET).pdf
 
 test:
 	$(PLATEX) -interaction=nonstopmode -output-directory=$(OUTPUT_DIR) $(TARGET).tex
-	ruby tools/input-list.rb input $(SRC_DIR) $(BUILDED_TARGET).log | xargs ruby ta9boh/ta9boh.rb $(OPTION)
+	ruby tools/input-list.rb input $(SRC_DIR) $(BUILDED_TARGET).log | xargs ruby ta9boh/ta9boh.rb --log-level=$(LOG_LEVEL)
 	ruby tools/input-list.rb not-input $(SRC_DIR) $(BUILDED_TARGET).log
