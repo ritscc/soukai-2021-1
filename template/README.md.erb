@@ -1,6 +1,6 @@
-<%= "#{words[:current_year]}" %>年度第<%= "#{words[:ordinal_kanji]}" %>回総会議案書
+<%= "#{info[:fiscal_year]}" %>年度第<%= "#{info[:ordinal_kanji]}" %>回総会議案書
 ========================
-これは，<%= "#{words[:current_year]}" %>年度第<%= "#{words[:ordinal_kanji]}" %>回総会議案書リポジトリです．
+これは，<%= "#{info[:fiscal_year]}" %>年度第<%= "#{info[:ordinal_kanji]}" %>回総会議案書リポジトリです．
 文書は，LaTeXを用いて執筆します．
 
 ビルドステータス
@@ -8,7 +8,7 @@
 Werckerを用いて，総会文書のビルドを自動化しています．
 生成されたPDFは，[Slackの総会チャンネル](https://ritscc.slack.com/messages/soukai/)にアップロードされます．
 
- <%= "#{words[:wercker_badge]}" %>
+ <%= "#{info[:wercker_badge]}" %>
 
 文章表現について
 -----------------------
@@ -16,9 +16,9 @@ Werckerを用いて，総会文書のビルドを自動化しています．
 
 * 口調：**である調**(だ調はダメ)
 
-* 数字：固有名詞(例：<%= "#{words[:current_year]}" %>年度第<%= "#{words[:ordinal_kanji]}" %>回総会)，慣用句(三日月)，一つ・二つ，一回生・二回生 以外は**半角アラビア数字**
+* 数字：固有名詞(例：<%= "#{info[:fiscal_year]}" %>年度第<%= "#{info[:ordinal_kanji]}" %>回総会)，慣用句(三日月)，一つ・二つ，一回生・二回生 以外は**半角アラビア数字**
 * 西暦等：**半角アラビア数字**
-* 日付：**○○○○年○月○日**(例1：<%= "#{words[:current_year]}" %>年10月1日，例2：10月1日，2日，3日)
+* 日付：**○○○○年○月○日**(例1：2013年10月1日，例2：10月1日，2日，3日)
 * 期間：**○か月(か はひらがな)**
 
 * 以下省略：**正式名称(以下，略称)**，(例：関西情報系学生団体交流会(以下，KC3))
@@ -31,9 +31,9 @@ Werckerを用いて，総会文書のビルドを自動化しています．
 
 * RCC・当会・本会：**本会**
 * 本局・当局：**本局**
-* <%= "#{words[:last_year]}" %>年度・昨年度・前年度：**昨年度**
-* <%= "#{words[:current_year]}" %>年度・今年度：**今年度**
-* <%= "#{words[:next_year]}" %>年度・来年度・次年度：**来年度**
+* <%= "#{info[:last_year]}" %>年度・昨年度・前年度：**昨年度**
+* <%= "#{info[:fiscal_year]}" %>年度・今年度：**今年度**
+* <%= "#{info[:next_year]}" %>年度・来年度・次年度：**来年度**
 
 * おこなう：**行う**(な抜き)
 
@@ -54,8 +54,8 @@ SourceTree(GUIツール)を利用する方は，それっぽい説明を頑張�
 作業を始める前に，このリポジトリをクローン(clone)する必要があります．
 言い換えれば，総会議案書とそれを管理するGitのデータを取得するということです．
 
-* SSHでのクローン: `$ git clone git@bitbucket.org:ritscc/<%= "#{words[:repo_name]}" %>.git`
-* HTTPSでのクローン: `$ git clone https://bitbucket.org/ritscc/<%= "#{words[:repo_name]}" %>.git`
+* SSHでのクローン: `$ git clone git@bitbucket.org:ritscc/<%= "#{info[:repo_name]}" %>.git`
+* HTTPSでのクローン: `$ git clone https://bitbucket.org/ritscc/<%= "#{info[:repo_name]}" %>.git`
 
 SSHの設定していない方はHTTPSからクローンしてください．
 SSHでクローンしておくと，コミット作業が楽です．
@@ -89,10 +89,10 @@ SSHでクローンしておくと，コミット作業が楽です．
 6. 完成したらリポジトリにプッシュ(push)します．  
    `$ git push origin <branchname>`  
    __(注)__ なお，先ほど挙げたmasterとdevelopにはプッシュできません．権限の管理を行っています．
-7. <https://bitbucket.org/ritscc/<%= "#{words[:repo_name]}" %>>からプルリクエスト(pull request)を作成します．  
+7. <https://bitbucket.org/ritscc/<%= "#{info[:repo_name]}" %>>からプルリクエスト(pull request)を作成します．  
    画面右上の方の「プルリクエスト」のボタンから作成してください．  
    __(注)__ タイトルは，課題番号を`Fix #<課題番号> : <作業内容>`という形式で記述してください．  
-   左には，先ほど自分がプッシュ(push)したブランチを，右には「ritscc/<%= "#{words[:repo_name]}" %>」の「develop」のブランチをセットします．  
+   左には，先ほど自分がプッシュ(push)したブランチを，右には「ritscc/<%= "#{info[:repo_name]}" %>」の「develop」のブランチをセットします．  
    ※ なお，プルリクエストは，自分のブランチをdevelopにマージしたいという申請のことです．
 8. あとはレビューされてください．みんなはレビューしてください．  
    問題点があれば，プルリクエストのコメントを使って，問題点を指摘してください．  
@@ -119,7 +119,7 @@ Gitのサブモジュール機能を使って，当会の規約を総会議案�
 LaTeXのコンパイル時に必要になるので，説明しておきます．
 
 ```shell
-$ cd <%= "#{words[:repo_name]}" %>
+$ cd <%= "#{info[:repo_name]}" %>
 $ git submodule init
 $ git submodule update
 ```
@@ -133,7 +133,7 @@ LinuxやMacOSを使っている人は，以下のコマンドでLaTeXのコン�
 ここでは，Makefileを使って，PDFを生成する方法を載せています．
 
 ```shell
-$ cd <%= "#{words[:repo_name]}" %>
+$ cd <%= "#{info[:repo_name]}" %>
 $ make pdf
 ```
 
