@@ -24,9 +24,9 @@ $ ruby setup.rb init
 これはコンフリクトを避けるためです．
 タスクを作成する時に編集するべきファイルパスを明示しておくと混乱が減ると思われます．
 
-詳しくは，[README_setup.md](README_setup.md)を見てください．
+詳しくは，[README_setup.md](docs/README_setup.md)を見てください．
 
 Werckerについて
 -----------------------
 継続的インテグレーションを支援するサービス Werckerを用いて，総会文書のビルドを自動化しています．
-WerckerやWerckerのセットアップ方法については，[README_CI.md](README_CI.md)に詳しく紹介していますので，興味がある方やセットアップ担当者はぜひご覧ください．
+WerckerやWerckerのセットアップ方法については，[README_CI.md](docs/README_CI.md)に詳しく紹介していますので，興味がある方やセットアップ担当者はぜひご覧ください．

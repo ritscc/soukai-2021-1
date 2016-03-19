@@ -6,6 +6,7 @@ require "yaml"
 require "net/https"
 require "io/console"
 require 'erb'
+require 'date'
 
 # 種別ごとに文責を生成
 # nilやどれにも当てはまらなければ, デフォルトを返す
@@ -183,26 +184,32 @@ def get_value(msg, default)
 end
 
 def init_repo
-  t = Time.now
-  words = {}
+  info = {}
+  rm_list = [
+    %w(src/houshin/4kai.tex src/kouki.tex),
+    %w(src/houshin/1kai.tex src/soukatsu/4kai.tex src/zenki.tex)
+  ]
 
-  words[:current_year] = get_value('開催年度', t.year - (t.month < 4 ? 1 : 0))
-  words[:last_year] = words[:current_year].to_i - 1
-  words[:next_year] = words[:current_year].to_i + 1
-  words[:heisei] = words[:current_year].to_i - 1988
-  words[:month] = get_value('開催月', t.month)
-  words[:day] = get_value('開催日', t.day)
-  words[:ordinal] = get_value('第何回目?', ((4..9).include?(t.month) ? 1 : 2))
-  words[:ordinal_kanji] = (words[:ordinal].to_i == 1 ? '一' : '二')
-  words[:semester] = (words[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
-  words[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
-  words[:repo_name] = "soukai-#{words[:current_year]}-#{words[:ordinal]}"
+  info[:date] = Date.parse(get_value('開催日', Date.today.to_s))
+  info[:fiscal_year] = info[:date].year - (info[:date].month < 4 ? 1 : 0)
+  info[:last_year] = info[:fiscal_year] - 1
+  info[:next_year] = info[:fiscal_year] + 1
+  info[:heisei] = info[:date].year - 1988
+  info[:ordinal] = get_value('第何回目?', ((4..9).include?(info[:date].month) ? 1 : 2))
+  info[:ordinal_kanji] = (info[:ordinal].to_i == 1 ? '一' : '二')
+  info[:semester] = (info[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
+  info[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
+  info[:repo_name] = "soukai-#{info[:current_year]}-#{info[:ordinal]}"
 
   readme = ERB.new(File.read('template/README.md.erb'))
   File.write('README.md', readme.result(binding))
 
   tex = ERB.new(File.read('template/document.tex.erb'))
   File.write('document.tex', tex.result(binding))
+
+  rm_list[info[:ordinal] - 1].each do |file_name|
+    File.delete file_name
+  end
 end
 
 def create_files

@@ -4,12 +4,12 @@
 \texCommandsRoot{tex-commands}
 \inputCommandsAll
 
-\year{<%= "#{words[:current_year]}" %>}
-\heisei{<%= "#{words[:heisei]}" %>}
-\month{<%= "#{words[:month]}" %>}
-\day{<%= "#{words[:day]}" %>}
+\year{<%= "#{info[:fiscal_year]}" %>}
+\heisei{<%= "#{info[:heisei]}" %>}
+\month{<%= "#{info[:date].month}" %>}
+\day{<%= "#{info[:date].day}" %>}
 
-<%= "#{words[:semester]}" %>
+<%= "#{info[:semester]}" %>
 %\zenki
 %\kouki
 

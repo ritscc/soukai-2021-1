@@ -9,6 +9,8 @@ BUILDED_TARGET = $(OUTPUT_DIR)/$(TARGET)
 BRANCH = HEAD
 SUBMODULE_BRANCH = master
 
+YEAR = $(shell cat README.md | head -n 1 | sed -e 's/^\([0-9]*\).*/\1/')
+
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 # for Linux
@@ -50,4 +52,6 @@ open: $(BUILDED_TARGET).pdf
 	$(PDF_READER) $(BUILDED_TARGET).pdf &
 
 test:
-	find $(SRC_DIR) -name "*.tex" | xargs ruby ta9boh/ta9boh.rb $(OPTION)
+	$(PLATEX) -interaction=nonstopmode -output-directory=$(OUTPUT_DIR) $(TARGET).tex > /dev/null || (ruby tools/filter-error.rb $(BUILDED_TARGET).log && false)
+	ruby tools/input-list.rb input $(SRC_DIR) $(BUILDED_TARGET).log | YEAR=$(YEAR) xargs ruby ta9boh/ta9boh.rb $(OPTION)
+	ruby tools/input-list.rb not-input $(SRC_DIR) $(BUILDED_TARGET).log
