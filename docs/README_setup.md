@@ -14,7 +14,7 @@ Macではreadlineをインストールする必要があるかもしれません
 
 `filename: タイトル, 姓 名, BitbucketID`
 
-yamlファイルは以下のようなフォーマットで記述します．
+YAMLファイルは以下のようなフォーマットで記述します．
 詳しくはググってください．
 
 ```yml
@@ -105,3 +105,48 @@ $ ruby setup.rb issue
 $ ruby setup.rb i src/soukatsu/soumu
 $ ruby setup.rb i houshin
 ```
+
+## 局別ブランチを作る例
+ここではシステム管理局を例として局別ブランチを作る方法を説明します．
+
+まずdevelopブランチから局別ブランチを切ります．
+局別ブランチは総括と方針で分けておいたほうが管理しやすいです．
+
+```shell
+$ git checkout develop
+$ git checkout -b system_soukatsu
+```
+
+ブランチを作り終えたら`assignee.yml`を編集します．
+システム管理局総括の章を増やします．
+以下はその一部抜粋です．
+
+```yml
+soukatsu:
+  syogai:
+#    zentai: 全体総括,
+  system:
+    zentai: 全体総括, シス管 局長, kyokucho
+    torikumi: 会内の技術を高める取り組み, シス管 局員その1, kyokuin1
+    service: サービスの運用, シス管 局員その2, kyokuin2
+  soumu:
+#    zentai: 全体総括,
+```
+
+編集が終わったらテンプレートファイルを生成しましょう．
+以下のコマンドを打って生成します．
+また，Bitbucketの課題にも追加しましょう
+
+```shell
+$ ruby setup.rb g src/soukatsu/system
+$ ruby setup.rb i src/soukatsu/system
+```
+
+テンプレートの生成は完了したので，ブランチをpushします．
+
+```shell
+$ git push -u origin system_soukatsu
+```
+
+以上が局別ブランチの作り方でした．
+局別ブランチを作って，面倒な手動マージ作業を減らしましょう！
