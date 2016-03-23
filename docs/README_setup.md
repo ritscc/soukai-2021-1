@@ -7,6 +7,33 @@ soukai-templateからforkした直後や，各局のブランチを作るとき�
 Macではreadlineをインストールする必要があるかもしれません.
 [参考リンク](http://qiita.com/kidachi_/items/d0137d96bed9ac381fd5)
 
+## assignee.ymlについて
+章の担当者を管理するファイルです．
+テンプレートファイルの生成やBitbucketへの課題追加時に利用されます．
+フォーマットは以下のようになっています．
+
+`filename: タイトル, 姓 名, BitbucketID`
+
+yamlファイルは以下のようなフォーマットで記述します．
+詳しくはググってください．
+
+```yml
+soukatsu:
+  zentai:
+    zentai: 後期活動総括, RCC 会長, cc
+    unei: 運営総括, RCC 副会長, cc
+```
+
+例えば，全体総括の中に学園祭総括を追加したい場合は以下のように編集します．
+
+```yml
+soukatsu:
+  zentai:
+    zentai: 後期活動総括, RCC 会長, bitbucket_kaicho
+    unei: 運営総括, RCC 副会長, bitbucket_hukukaicho
+    gakuensai: 学園祭総括, RCC 学祭担当者, bitbucket_gakuensai
+```
+
 ## 各コマンドの使い方
 
 ### initコマンド
@@ -17,6 +44,7 @@ Macではreadlineをインストールする必要があるかもしれません
 
 ```shell
 $ ruby setup.rb init
+$ ruby setup.rb I
 ```
 
 WerckerのShare Badgeが最後に聞かれます．
@@ -28,15 +56,52 @@ Werckerをまだ使っていない場合は空欄にしておいてください�
 後からでも変更ができます．
 
 ### generateコマンド
-subsection以降を書くためのテンプレートファイルを生成します．
+`assignee.yml`を読み込んで，subsection以降を書くためのテンプレートファイルを生成します．
 それと同時に`\input`コマンドもファイルに追記します．
-実行する際に，総括と方針のどちらなのか，扱う局はどこなのか，
-作成するsubsectionのファイル名を指定する必要があります．
-実行時にはsubsectionで用いる小節名や，担当者の名前を入力してください．
+`assignee.yml`に正しいフォーマットで担当者の情報を記入する必要があります．
+
+フィルターを指定して生成するファイルを制御することができます．
+フィルターを利用することで局のファイルだけ生成するということが可能になります．
+フィルターは以下のいずれかで指定できます．
+
+- `filepath`
+- `<type>`
+- `<type> <section>`
+
+おそらくファイルパスでディレクトリを指定するのが一番簡単でしょう．
+`type`と`section`はそれぞれ以下のパラメータから選ぶことができます．
+
+```
+type:
+  hajimeni
+  soukatsu
+  houshin
+
+section:
+  zentai
+  kaikei
+  kensui
+  syogai
+  system
+  soumu
+```
 
 例:
 
 ```shell
-$ ruby setup.rb generate soukatsu zentai welcome group hackathon
-$ ruby setup.rb generate houshin syogai kc3 webpage
+$ ruby setup.rb generate
+$ ruby setup.rb g src/soukatsu/soumu
+$ ruby setup.rb g houshin
+```
+
+### issueコマンド
+`assignee.yml`を読み込んで，Bitbucketに課題を登録します。
+generateコマンドと同様にフィルターを指定できます．
+
+例:
+
+```shell
+$ ruby setup.rb issue
+$ ruby setup.rb i src/soukatsu/soumu
+$ ruby setup.rb i houshin
 ```
