@@ -18,10 +18,11 @@ build:
             code: 'git submodule update --init --recursive'
         - script:
             name: 'testing with ta9boh'
-            code: 'make test'
+            code: 'tools/test-and-comment.sh'
         - script:
             name: 'building a pdf'
             code: 'make pdf'
+
 deploy:
     steps:
         - install-packages:

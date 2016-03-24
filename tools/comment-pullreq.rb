@@ -5,6 +5,7 @@ require "net/https"
 require "open-uri"
 require "io/console"
 require "json"
+require "base64"
 require 'cgi'
 
 class Bitbucket
@@ -86,10 +87,10 @@ else
   exit(1)
 end
 
-bitbucket = Bitbucket.new(repo_username, repo_slug, ENV['BITBUCKET_USER'], ENV['BITBUCKET_PASS'])
+bitbucket = Bitbucket.new(repo_username, repo_slug, ENV['BITBUCKET_USER'], Base64.decode64(ENV['BITBUCKET_PASS']).chomp)
 pullreq_list = bitbucket.get_pullreq_list
 
-branch = `git branch --contains`.split(' ')[1]
+branch = `git branch -a --contains`.scan(%r{.*/(.+?)$})[0][0]
 pullreq = pullreq_list[:values].find{|data| data[:source][:branch][:name] == branch}
 if pullreq
   comment_list = bitbucket.get_pullreq_comment(pullreq[:id])
@@ -98,6 +99,13 @@ if pullreq
   content = File.open(ARGV[0]) do |file|
     file.read
   end
-  content = "```\n" << content << "\n```\n"
+  message = if ARGV[1].to_i != 0
+    ":x: このままではマージできません！"
+  elsif content.match(/\[ERR\]/)
+    ":warning: エラーが残っています。"
+  else
+    ":white_check_mark: マージしても問題ありません！"
+  end
+  content = message << "\n\n```\n" << content << "\n```\n"
   bitbucket.send_pullreq_comment(pullreq[:id], content, comment)
 end

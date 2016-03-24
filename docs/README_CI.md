@@ -86,6 +86,15 @@ WerckerでSSHキーを生成して，それをBitbucketに登録する手順を�
 7. 入力が完了したら，"OK"ボタンを押して，設定を反映します．
 8. すべて終わったら，"Save"を押してTargetを保存します．
 
+#### 5. 自動コメント設定
+Werckerでビルドテストした結果をプルリクエストに自動でコメントすることができます．
+ここでは，その設定方法を説明します．
+
+1. Bitbucketの総会リポジトリに移動し， Settings > アクセス管理 から`ritscc_deploy`ユーザをREAD権限で追加します．
+2. Werckerの管理ページを開き，左メニューの"Environment variables"をクリックします．
+3. "Variable name"に`BITBUCKET_USER`，"Value"に`ritscc_deploy`を入力してAddボタンを押します．
+4. 更に"Variable name"に`BITBUCKET_PASS`，"Value"にritscc_deployのパスワードをBase64エンコードした文字列を入力してAddボタンを押します．この時`Protected`のチェックボックスにチェックを入れておきます．
+
 ### カスタマイズ
 カスタマイズを行ってくれる人を募集しています．総会文書の執筆をよりよくするようなソリューションを待っています．
 
