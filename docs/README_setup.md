@@ -17,7 +17,7 @@ Macではreadlineをインストールする必要があるかもしれません
 YAMLファイルは以下のようなフォーマットで記述します．
 詳しくはググってください．
 
-```yml
+```yaml
 soukatsu:
   zentai:
     zentai: 後期活動総括, RCC 会長, cc
@@ -26,7 +26,7 @@ soukatsu:
 
 例えば，全体総括の中に学園祭総括を追加したい場合は以下のように編集します．
 
-```yml
+```yaml
 soukatsu:
   zentai:
     zentai: 後期活動総括, RCC 会長, bitbucket_kaicho
@@ -42,7 +42,7 @@ soukatsu:
 
 例:
 
-```shell
+```bash
 $ ruby setup.rb init
 $ ruby setup.rb I
 ```
@@ -88,7 +88,7 @@ section:
 
 例:
 
-```shell
+```bash
 $ ruby setup.rb generate
 $ ruby setup.rb g src/soukatsu/soumu
 $ ruby setup.rb g houshin
@@ -100,7 +100,7 @@ generateコマンドと同様にフィルターを指定できます．
 
 例:
 
-```shell
+```bash
 $ ruby setup.rb issue
 $ ruby setup.rb i src/soukatsu/soumu
 $ ruby setup.rb i houshin
@@ -112,7 +112,7 @@ $ ruby setup.rb i houshin
 まずdevelopブランチから局別ブランチを切ります．
 局別ブランチは総括と方針で分けておいたほうが管理しやすいです．
 
-```shell
+```bash
 $ git checkout develop
 $ git checkout -b system_soukatsu
 ```
@@ -121,7 +121,7 @@ $ git checkout -b system_soukatsu
 システム管理局総括の章を増やします．
 以下はその一部抜粋です．
 
-```yml
+```yaml
 soukatsu:
   syogai:
 #    zentai: 全体総括,
@@ -137,14 +137,14 @@ soukatsu:
 以下のコマンドを打って生成します．
 また，Bitbucketの課題にも追加しましょう
 
-```shell
+```bash
 $ ruby setup.rb g src/soukatsu/system
 $ ruby setup.rb i src/soukatsu/system
 ```
 
 テンプレートの生成は完了したので，ブランチをpushします．
 
-```shell
+```bash
 $ git push -u origin system_soukatsu
 ```
 
