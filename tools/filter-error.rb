@@ -9,7 +9,7 @@ File.open(log_file) do |file|
   file.each_line do |line|
     line = line.chomp
     # inputされているtexファイル名を見つけて、エラー内容の起点とする
-    tmp_tex_file = line.scan(%r{^[^!].*\(\./(.*?\.tex)}).flatten.last
+    tmp_tex_file = line.scan(%r{^[^!]*\(\./(.*?\.tex)}).flatten.last
     if tmp_tex_file
       # 一つ前に見つかったtexファイル名がエラーが起きているファイル
       # ファイル名とエラーを出力
