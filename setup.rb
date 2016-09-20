@@ -264,7 +264,7 @@ houshin:
     }
 
     # get git info
-    if match = `git remote -v`.match(%r{bitbucket\.org[:/]([^/]+)/([^\.]+)\.git})
+    if match = `git remote -v`.match(%r{bitbucket\.org[:/]([^/]+)/([^\.]+)(\.git)?})
       repo_username = match[1]; repo_slug = match[2];
     else
       puts "fatal error: git repository is not found!!"
