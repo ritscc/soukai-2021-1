@@ -354,7 +354,7 @@ when 'I', 'init'
 when 'g', 'generate'
   setup.create_files ARGV[1..-1]
 when 'i', 'issue'
-  create_issue ARGV[1..-1]
+  setup.create_issue ARGV[1..-1]
 else
   print_help
 end
