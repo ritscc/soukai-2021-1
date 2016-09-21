@@ -57,43 +57,47 @@ Werckerの特徴は，非常に柔軟性が高いことです．
 ここでは，WerckerのDockerコンテナ内からBitbucketのプライベートリポジトリを読み込むために，
 WerckerでSSHキーを生成して，それをBitbucketに登録する手順を説明します．
 
-1. Werckerに追加した総会リポジトリのアプリケーションページで，右上の設定アイコンをクリックして，管理ページを開きます．
-2. 左メニューの"SSH Keys"をクリックして開きます．
-3. "Generate new keypair"をクリックしてSSHキーを生成します．Nameの入力欄には，`for_sub_module`と入力します．
-4. "Generate"ボタンをクリックして，SSHキーを生成します．
-5. "Public key"の表記の下に，SSHパブリックキーが表示されます．これをコピーしておいてください．
-6. `ritscc_deploy`ユーザでログインします．ログイン方法はWikiに載っています．また，前任者やシステム管理局に聞いても分かるでしょう．
+1. Werckerに追加した総会リポジトリのアプリケーションページで，上にあるタブの"Environment"をクリックして，環境変数設定ページを開きます．
+2. ページの一番下にある，入力欄（空欄になっている部分）まで移動します．
+3. Nameの入力欄には，`FOR_SUB_MODULE`と入力します．SSH-Keypairが，"Generate new SSH key-pair"になっていることを確認します．
+4. "Add"ボタンをクリックして，SSHキーを生成します．
+5. "for\_sub\_module"の表記の下に，SSHパブリックキーが表示されます．クリックするとすべて選択されます．これをコピーしておいてください．
+6. Bitbucketに，`ritscc_deploy`ユーザでログインします．ログイン方法はWikiに載っています．また，前任者やシステム管理局に聞いても分かるでしょう．
 7. [Bitbucketのritscc\_deployユーザのSSHキー設定ページ](https://bitbucket.org/account/user/ritscc_deploy/ssh-keys/)を開きます．
 8. "鍵を追加"ボタンを押すと，SSHキーの追加ウィンドウが表示されます．
 9. "Label"に`RCC Wercker for soukai-XXXX-X (for submodule)`(XXXXの部分は読み替えてください)と入力し，"Key"入力欄に先ほどコピーしておいたパブリックキーをペーストします．入力が終わったら，鍵を追加ボタンを押します．
-10. Werckerの管理ページに戻り，左メニューの"Environment variables"をクリックします．
-11. "Add new variable"ボタンをクリックします．
-12. "name"入力欄に`KEY_FOR_SUBMODULE`と入力し，2つの選択ボタンの2番目の"SSH key pair"を選択．"Select a key pair"では，先ほど追加した`for_sub_module`を選択します．
-13. "Save"ボタンをクリックして，設定を反映させます．
+10. Werckerに追加した総会リポジトリのアプリケーションページで，"Workflow"をクリックしてワークフロー設定ページを開きます．
+11. 一番下にある"Pipelines"に移動して，"build"と名前のついたパイプラインをクリックして，パイプライン設定ページに移動します．
+12. パイプライン設定ページの一番下にある"Settings"の"Report to SCM"にチェックを入れて，右下の"Update"ボタンをクリックします．こうするとGitHub の Pull Request 画面にパイプラインの実行結果を反映できます．
 
 #### 4. デプロイ設定
 デプロイとは，英語で「展開」「配置」を意味し，CIでいうとビルドしたソフトウェアを利用可能な状態に自動構成することをいいます．
-しかし，総会文書はソフトウェアではなく文書なので，また違った「デプロイ」を行います．
+しかし，総会文書はソフトウェアではなく文書なので，ソフトウェアとは違った「デプロイ」を行います．
 総会文書のデプロイ設定では，Slackの #soukai チャンネルに自動的に生成したPDFをアップロードしてくれるようにしています．
 ここでは，デプロイ設定の手順を説明します．
 
-1. Werckerの管理ページを開きます．(3.1参照)
-2. 左メニューの"Targets"をクリックして開きます．
-3. "Add deploy target"ボタンをクリックし，プルダウンメニューの中から"custom deploy"を選択します．
-4. "Deploy target name"の入力欄に`Slack Upload`に設定，"Auto Deploy"のチェックボックスにチェックを入れ，"auto deploy successful builds to branch(es):"の入力欄に`develop master`と入力します．これで，developブランチとmasterブランチのビルド結果のみを対象として自動デプロイを行うようになります．
-5. "Deploy pipeline"の項の"Add new variable"ボタンをクリックします．
-6. "name"に`SLACK_TOKEN`と入力し，2つの選択ボタンのうち"text"の方を選択します．"value"の入力欄には，1.6で確認したSlackのアクセストークンを入力します．トークンがわからないように，`Protected`のチェックボックスにチェックを入れておきます．
-7. 入力が完了したら，"OK"ボタンを押して，設定を反映します．
-8. すべて終わったら，"Save"を押してTargetを保存します．
+1. Werckerに追加した総会リポジトリのアプリケーションページで，"Workflow"をクリックしてワークフロー設定ページを開きます．
+2. 一番下の"Pipelines"の項まで移動します．
+3. "Add new pipeline"ボタンをクリックして，新しいパイプラインを設定します．
+4. "Name"の入力欄に`Slack_Upload`と入力，"YML Pipeline name"には`deploy`と入力，"Hook type"は`default`を選択します．完了したら，"Create"ボタンをクリックします．
+5. "Environment variables"の項の入力欄に移動します．
+6. "Name"に`SLACK_TOKEN`と入力し，"Value"の入力欄には，1.6で確認したSlackのアクセストークンを入力します．
+7. 入力が完了したら，"Add"ボタンを押して，設定を反映します．
+8. 再び"Workflow"をクリックしてワークフロー設定ページを開きます．
+9. 一番上の"Editor"の項で，"build"の右横にある"＋"ボタンをクリックします．
+10. "On Branch"の入力欄に，`master develop`と入力します．これで，masterブランチとdevelopブランチのビルド完了時に，パイプラインが実行されます．
+11. "Execute pipeline"は，先ほど作成したパイプライン`Slack_Upload`を指定します．
+12. 完了したら，"Add"ボタンをクリックします．
 
 #### 5. 自動コメント設定
 Werckerでビルドテストした結果をプルリクエストに自動でコメントすることができます．
 ここでは，その設定方法を説明します．
 
 1. Bitbucketの総会リポジトリに移動し， Settings > アクセス管理 から`ritscc_deploy`ユーザをREAD権限で追加します．
-2. Werckerの管理ページを開き，左メニューの"Environment variables"をクリックします．
-3. "Variable name"に`BITBUCKET_USER`，"Value"に`ritscc_deploy`を入力してAddボタンを押します．
-4. 更に"Variable name"に`BITBUCKET_PASS`，"Value"にritscc_deployのパスワードをBase64エンコードした文字列を入力してAddボタンを押します．この時`Protected`のチェックボックスにチェックを入れておきます．
+2. Werckerに追加した総会リポジトリのアプリケーションページで，上にあるタブの"Environment"をクリックして，環境変数設定ページを開きます．
+3. 同様に環境変数を追加します．"Environment variables"の項の空の入力欄に移動します．
+4. "Variable name"に`BITBUCKET_USER`，"Value"に`ritscc_deploy`を入力してAddボタンを押します．
+5. 更にもう一つ環境変数を追加します．"Variable name"に`BITBUCKET_PASS`，"Value"にritscc\_deployのパスワードをBase64エンコードした文字列を入力してAddボタンを押します．この時`Protected`のチェックボックスにチェックを入れておきます．Base64エンコードする際は，ローカルのPCの`base64`コマンドを用いるなどして，オンラインにパスワードを送信しないように注意してください．
 
 ### カスタマイズ
 カスタマイズを行ってくれる人を募集しています．総会文書の執筆をよりよくするようなソリューションを待っています．
@@ -106,5 +110,6 @@ Werckerでビルドテストした結果をプルリクエストに自動でコ�
 
 本リポジトリのwercker.ymlには，Werckerサービス上で動いているDockerコンテナ内で行なわれるビルドとデプロイの手順が記述されています．
 このファイルを変更することで，ビルドの動作やデプロイの方法を変更することが可能です．
-設定方法については，[Werckerによる説明ページ](http://devcenter.wercker.com/learn/wercker-yml/introduction.html)を参照してください．
-動作確認を行うには，[Wercker CLI](http://devcenter.wercker.com/learn/basics/the-wercker-cli.html)が便利です．
+設定方法については，[Werckerによる説明ページ](http://devcenter.wercker.com/learn/basics/configuration.html)を参照してください．
+動作確認やローカルで動作させるには，ローカル環境で実行できる[Wercker CLI](http://wercker.com/cli/install/)が便利です．
+なお，Wercker CLIが動作するOSは，Linuxか，OS X (macOS)です．
