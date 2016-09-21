@@ -24,8 +24,11 @@ when 'input'
 when 'not-input'
   not_input_list = exists_list(src_dir) - input_list(src_dir, log_file)
   unless not_input_list.empty?
-    puts '以下のファイルがinputされていません'
+    puts '以下のファイルが \input{} コマンドで総会文書に取り込まれていません．'
     puts not_input_list.join("\n")
-    exit(1)
+    puts ''
+    puts '総会文書執筆では，担当箇所ごとにファイルを分割しています．'
+    puts '分割されたファイルは，章のファイルや局別のファイルで'
+    puts '\input{} コマンドを用いて取り込む必要があります．'
   end
 end
