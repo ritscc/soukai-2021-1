@@ -17,11 +17,27 @@ class Bitbucket
   end
 
   def get_pullreq_list
-    request_json('get', pullreq_path, '2.0', state: 'OPEN', pagelen: 50)
+    list = []
+    page = 1
+    loop do
+      json = request_json('get', pullreq_path, '2.0', state: 'OPEN', pagelen: 50, page: page)
+      list.concat(json[:values])
+      page += 1
+      break if json[:next].nil?
+    end
+    list
   end
 
   def get_pullreq_comment(pullreq_id)
-    request_json('get', pullreq_path + "/#{pullreq_id}/comments", '2.0', pagelen: 50)
+    list = []
+    page = 1
+    loop do
+      json = request_json('get', pullreq_path + "/#{pullreq_id}/comments", '2.0', pagelen: 50, page: page)
+      list.concat(json[:values])
+      page += 1
+      break if json[:next].nil?
+    end
+    list
   end
 
   def send_pullreq_comment(pullreq_id, content, comment = nil)
@@ -92,10 +108,10 @@ bitbucket = Bitbucket.new(repo_username, repo_slug, ENV['BITBUCKET_USER'], Base6
 pullreq_list = bitbucket.get_pullreq_list
 
 branch = `git branch -a --contains`.scan(%r{.*/(.+?)$})[0][0]
-pullreq = pullreq_list[:values].find{|data| data[:source][:branch][:name] == branch}
+pullreq = pullreq_list.find{|data| data[:source][:branch][:name] == branch}
 if pullreq
   comment_list = bitbucket.get_pullreq_comment(pullreq[:id])
-  comment = comment_list[:values].find {|data| data[:user][:username] == ENV['BITBUCKET_USER']}
+  comment = comment_list.find {|data| data[:user][:username] == ENV['BITBUCKET_USER']}
 
   errors = File.open(ARGV[0], &:read).tap do |content|
     content.empty? ? '' : "\n\n```\n" + content + "\n```\n"
