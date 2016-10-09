@@ -219,14 +219,15 @@ houshin:
     assignee = (info && info[:assignee]) || { family: '姓', name: '名' }
     kaisei = ['\firstGrade', '\secondGrade', '\thirdGrade', '\fourthGrade']
 
-    case section
-    when 'kaikei', 'kensui', 'syogai', 'system', 'soumu'
-      list = ["\\#{section}Chief", "\\#{section}Staff"]
-    when 'kaisei'
-      list = kaisei
-    else
-      list = ['\president', '\subPresident'] + kaisei
-    end
+    list =
+      case section
+      when 'kaikei', 'kensui', 'syogai', 'system', 'soumu'
+        ["\\#{section}Chief", "\\#{section}Staff"]
+      when 'kaisei'
+        kaisei
+      else
+        ['\president', '\subPresident'] + kaisei
+      end
 
     list.map do |pos|
       "%\\writtenBy{#{pos}}{#{assignee[:family]}}{#{assignee[:name]}}"
