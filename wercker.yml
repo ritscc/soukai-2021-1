@@ -3,9 +3,6 @@ box: timnn/texlive
 
 build:
     steps:
-        - install-packages:
-            name: 'install make ruby'
-            packages: 'make ruby'
         - add-ssh-key:
             keyname: 'KEY_FOR_SUBMODULE'
             host: 'bitbucket.org'
