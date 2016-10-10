@@ -1,11 +1,11 @@
 # encoding: utf-8
 # Macだとこれしないといけない可能性 http://qiita.com/kidachi_/items/d0137d96bed9ac381fd5
 
-require "readline"
+require 'readline'
 require 'singleton'
-require "yaml"
-require "net/https"
-require "io/console"
+require 'yaml'
+require 'net/https'
+require 'io/console'
 require 'erb'
 require 'date'
 
@@ -54,32 +54,18 @@ class Setup
   end
 
   def create_files(*dir)
-    begin
-      assignee = load_assignee
-    rescue
-      $stderr.puts 'YAMLファイルのフォーマットが正しくありません'
-      exit(1)
-    end
-
-    assignee.each do |path, info|
+    assignees.each do |path, info|
       create_file(path, info) if path.start_with? File.join(*dir).gsub(%r{^(./)?src/}, '')
     end
   end
 
   def create_issue(*dir)
-    puts  "Please type these infomations in order to create issues on Bitbucket: "
+    puts 'Please type these infomations in order to create issues on Bitbucket: '
     puts 'empty id is bad. retype.' until bitbucket_id = get_value('Bitbucket ID', nil)
     puts 'empty id is bad. retype.' until bitbucket_passwd = $stdin.noecho { print 'Bitbucket Password: '; $stdin.gets; }.chomp
-    puts ""
+    puts ''
 
-    begin
-      assignee = load_assignee
-    rescue
-      $stderr.puts 'YAMLファイルのフォーマットが正しくありません'
-      exit(1)
-    end
-
-    assignee.each do |path, info|
+    assignees.each do |path, info|
       create_task(path, info, bitbucket_id, bitbucket_passwd) if path.start_with? File.join(*dir).gsub(%r{^(./)?src/}, '')
     end
   end
@@ -88,7 +74,7 @@ class Setup
 
   # 担当者のyamlファイルのテンプレートを生成
   def create_assignee_template(ordinal)
-    assignee = <<-"EOS"
+    template = <<-"EOS"
 # RCC 自動生成用テンプレート
 # 【書式】 filename: タイトル, 姓 名, BitbucketID
 # （例）1kai: 1回生総括, RCC 太郎, RCC_Tarou
@@ -133,49 +119,52 @@ houshin:
     EOS
 
     [
-      %w( 4回生方針 ),
-      %w( 4回生総括 1回生方針 )
+      %w(4回生方針),
+      %w(4回生総括 1回生方針)
     ][ordinal - 1].each do |target|
-      assignee.gsub!(/^.*#{target}.*\n/, '')
+      template.gsub!(/^.*#{target}.*\n/, '')
     end
 
-    File.write(ASSIGNEE_PATH, assignee);
+    File.write(ASSIGNEE_PATH, template);
   end
 
   # 文責情報を読み込む
-  def load_assignee
+  def assignees
     yaml = File::open(ASSIGNEE_PATH) do |file|
       YAML::load(file.read)
     end
 
-    assignee = {}
+    assignee_list = {}
 
     yaml.each do |type, type_data|
       case type
       when 'hajimeni'
-        assignee['hajimeni.tex'] = parse_assignee(type_data)
+        assignee_list['hajimeni.tex'] = parse_assignee(type_data)
       when 'soukatsu', 'houshin'
         type_data && type_data.each do |section, section_data|
           case section
           when /^\dkai$/
-            assignee[File.join(type, "#{section}.tex")] = parse_assignee(section_data)
+            assignee_list[File.join(type, "#{section}.tex")] = parse_assignee(section_data)
           when 'zentai', 'kaikei', 'kensui', 'syogai', 'system', 'soumu'
             section_data && section_data.each do |subsection, subsection_data|
-              assignee[File.join(type, section, "#{subsection}.tex")] = parse_assignee(subsection_data)
+              assignee_list[File.join(type, section, "#{subsection}.tex")] = parse_assignee(subsection_data)
             end
           end
         end
       end
     end
 
-    assignee
+    assignee_list
   end
 
   def parse_assignee(data)
     {}.tap do |info|
-      info[:assignee] = {}
-      info[:title], full_name, info[:assignee][:bitbucket_id] = data.split(',').map(&:strip)
-      info[:assignee][:family], info[:assignee][:name] = full_name.split(' ')
+      info[:title], full_name, bitbucket_id = data.split(',').map(&:strip)
+      if full_name || bitbucket_id
+        info[:assignee] = {}
+        info[:assignee][:bitbucket_id] = bitbucket_id
+        info[:assignee][:family], info[:assignee][:name] = full_name.split(' ') if full_name
+      end
     end
   end
 
@@ -194,80 +183,73 @@ houshin:
       end
 
       # 文責の生成
-      lines = ["\\subsection*{#{info[:title]}}"]
-      add_positions(lines, info, section)
+      lines = ["\\subsection*{#{info[:title]}}"] + positions(info, section)
 
       # ファイルを生成し、書き込みを行う
       File.write(subsection_file, lines.join("\n") + "\n")
 
       # section_fileにinputが書かれていなかったら、追加
-      s = File.read(section_file, :encoding => Encoding::UTF_8)
+      # TODO: 自動inputにする
+      s = File.read(section_file, encoding: Encoding::UTF_8)
       unless s =~ /#{subsection_file}/
         File.open(section_file, 'a') do |file|
           file.puts("\\input{#{subsection_file}}")
         end
       end
-    elsif filepath =~ %r{/[1234]kai.tex$} || filepath == "hajimeni.tex"
+    elsif filepath =~ %r{/[1234]kai.tex$} || filepath == 'hajimeni.tex'
       # 回生別 または はじめに の場合
       subsection_file = File.join('./src', filepath)
+      type = filepath == 'hajimeni.tex' ? nil : 'kaisei'
       puts("warning: '#{subsection_file}' will be changed.")
-      if File.exist?(subsection_file) && assignee = info[:assignee] # assigneeが空の場合は作成されない.
-        s = File.read(subsection_file, :encoding => Encoding::UTF_8)
-        s.gsub!('\writtenBy{役職}{姓}{名}\n', '') # 該当行の削除
-        lines = []
-        add_positions(lines, info)
-        s << lines.join("\n") << "\n"
-        File.write(subsection_file, s)
+
+      File.open(subsection_file, 'a') do |file|
+        file.puts(positions(info, type).join("\n") + "\n")
       end
     else
-      puts("unsupported file path.")
-      return false
+      puts('unsupported file path.')
+      return
     end
 
     puts "created '#{subsection_file}'"
   end
 
-  # 文責の生成
-  def add_positions(lines, info, section = nil)
-    return nil unless lines.is_a?(Array)
-
-    positions = generate_position(section)
-    assignee = (info && info[:assignee]) || {family: "xxxx", name: "xxxx"}
-
-    positions.each do |pos|
-      lines.push("%\\writtenBy{#{pos}}{#{assignee[:family]}}{#{assignee[:name]}}")
-    end
-  end
-
   # 種別ごとに文責を生成
   # nilやどれにも当てはまらなければ, デフォルトを返す
-  def generate_position(section)
-    case section
-    when 'kaikei' then ['\kaikeiChief', '\kaikeiStaff']
-    when 'kensui' then ['\kensuiChief', '\kensuiStaff']
-    when 'syogai' then ['\syogaiChief', '\syogaiStaff']
-    when 'system' then ['\systemChief', '\systemStaff']
-    when 'soumu'  then ['\soumuChief', '\soumuStaff']
-    else               ['\president', '\subPresident', '\firstGrade', '\secondGrade', '\thirdGrade', '\fourthGrade']
+  def positions(info, section = nil)
+    assignee = (info && info[:assignee]) || { family: '姓', name: '名' }
+    kaisei = ['\firstGrade', '\secondGrade', '\thirdGrade', '\fourthGrade']
+
+    list =
+      case section
+      when 'kaikei', 'kensui', 'syogai', 'system', 'soumu'
+        ["\\#{section}Chief", "\\#{section}Staff"]
+      when 'kaisei'
+        kaisei
+      else
+        ['\president', '\subPresident'] + kaisei
+      end
+
+    list.map do |pos|
+      "%\\writtenBy{#{pos}}{#{assignee[:family]}}{#{assignee[:name]}}"
     end
   end
 
   def create_task(filepath, info, user, passwd)
     assignee = info[:assignee] || {}
     data = {
-      "title"       => "#{filepath}:#{info[:title]}",
-      "content"     => "担当者は、#{assignee[:family]} #{assignee[:name]}さんです。\n`src/#{filepath}`を編集してください。",
-      "responsible" => "#{assignee[:bitbucket_id]}",
-      "status"      => "new",
-      "priority"    => "major",
-      "kind"        => "task"
+      'title'       => "#{filepath}:#{info[:title]}",
+      'content'     => "担当者は、#{assignee[:family]} #{assignee[:name]}さんです。\n`src/#{filepath}`を編集してください。",
+      'responsible' => assignee[:bitbucket_id].to_s,
+      'status'      => 'new',
+      'priority'    => 'major',
+      'kind'        => 'task'
     }
 
     # get git info
     if match = `git remote -v`.match(%r{bitbucket\.org[:/]([^/]+)/([^\.]+)(\.git)? })
       repo_username = match[1]; repo_slug = match[2];
     else
-      puts "fatal error: git repository is not found!!"
+      puts 'fatal error: git repository is not found!!'
     end
 
     # check task existence
@@ -348,13 +330,15 @@ end
 
 setup = Setup.instance
 
-case ARGV[0]
-when 'I', 'init'
-  setup.init_repo
-when 'g', 'generate'
-  setup.create_files ARGV[1..-1]
-when 'i', 'issue'
-  setup.create_issue ARGV[1..-1]
-else
-  print_help
+begin
+  case ARGV[0]
+  when 'I', 'init'
+    setup.init_repo
+  when 'g', 'generate'
+    setup.create_files ARGV[1..-1]
+  when 'i', 'issue'
+    setup.create_issue ARGV[1..-1]
+  else
+    print_help
+  end
 end
