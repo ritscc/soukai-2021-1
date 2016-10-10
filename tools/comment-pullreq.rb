@@ -113,8 +113,9 @@ if pullreq
   comment_list = bitbucket.get_pullreq_comment(pullreq[:id])
   comment = comment_list.find {|data| data[:user][:username] == ENV['BITBUCKET_USER']}
 
-  errors = File.open(ARGV[0], &:read).tap do |content|
-    content.empty? ? '' : "\n\n```\n" + content + "\n```\n"
+  errors = File.open(ARGV[0]) do |file|
+    content = file.read
+    content.empty? ? '' : ("\n\n```\n" + content + "\n```\n")
   end
   message =
     if ARGV[1].to_i.nonzero?
