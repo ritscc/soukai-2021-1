@@ -95,7 +95,7 @@ $ ruby setup.rb g houshin
 ```
 
 ### issueコマンド
-`assignee.yml`を読み込んで，Bitbucketに課題を登録します。
+`assignee.yml`を読み込んで，Bitbucketに課題を登録します．
 generateコマンドと同様にフィルターを指定できます．
 
 例:
