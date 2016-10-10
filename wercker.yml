@@ -1,11 +1,11 @@
 # Configuration file for http://wercker.com
-box: hiono/texlive
+box: timnn/texlive
 
 build:
     steps:
         - install-packages:
-            name: 'install git & make & ruby'
-            packages: 'git make ruby'
+            name: 'install make ruby'
+            packages: 'make ruby'
         - add-ssh-key:
             keyname: 'KEY_FOR_SUBMODULE'
             host: 'bitbucket.org'
@@ -26,8 +26,8 @@ build:
 deploy:
     steps:
         - install-packages:
-            name: 'install curl & git'
-            packages: 'curl git'
+            name: 'install curl'
+            packages: 'curl'
         - script:
             name: 'deploy to slack'
             code: !str |
