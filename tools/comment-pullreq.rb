@@ -1,26 +1,31 @@
 # coding: utf-8
 
-require 'readline'
 require 'net/https'
-require 'open-uri'
-require 'io/console'
 require 'json'
 require 'base64'
 require 'cgi'
 
+class AuthorizedError < StandardError; end
+
 class Bitbucket
-  def initialize(repo_username, repo_slug, user, passwd)
+  def initialize(repo_username, repo_slug, key, secret)
     @repo_username = repo_username
     @repo_slug = repo_slug
-    @user = user
-    @passwd = passwd
+    bearer_token = "#{key}:#{secret}"
+    encoded_bearer_token = Base64.strict_encode64(bearer_token)
+    @auth = "Basic #{encoded_bearer_token}"
+    authorize
+  end
+
+  def get_user
+    request_bitbucket('get', '/user', '2.0')
   end
 
   def get_pullreq_list
     list = []
     page = 1
     loop do
-      json = request_json('get', pullreq_path, '2.0', state: 'OPEN', pagelen: 50, page: page)
+      json = request_bitbucket('get', pullreq_path, '2.0', state: 'OPEN', pagelen: 50, page: page)
       list.concat(json[:values])
       page += 1
       break if json[:next].nil?
@@ -32,7 +37,7 @@ class Bitbucket
     list = []
     page = 1
     loop do
-      json = request_json('get', pullreq_path + "/#{pullreq_id}/comments", '2.0', pagelen: 50, page: page)
+      json = request_bitbucket('get', pullreq_path + "/#{pullreq_id}/comments", '2.0', pagelen: 50, page: page)
       list.concat(json[:values])
       page += 1
       break if json[:next].nil?
@@ -44,7 +49,7 @@ class Bitbucket
     method = comment ? 'put' : 'post'
     path = pullreq_path + "/#{pullreq_id}/comments"
     path += "/#{comment[:id]}" if comment
-    request_json(method, path, '1.0', content: content)
+    request_bitbucket(method, path, '1.0', content: content)
   end
 
   private
@@ -55,16 +60,16 @@ class Bitbucket
     query_string = (query_hash || {}).map{|k, v|
       CGI.escape(k.to_s) + '=' + CGI.escape(v.to_s)
     }.join('&')
+    header = { 'Authorization' => @auth }
 
     args =
       if method == 'post'
-        [Net::HTTP::Post.new(uri.path), query_string]
+        [Net::HTTP::Post.new(uri.path, header), query_string]
       elsif method == 'put'
-        [Net::HTTP::Put.new(uri.path), query_string]
+        [Net::HTTP::Put.new(uri.path, header), query_string]
       else
-        [Net::HTTP::Get.new(uri.path + (query_string.empty? ? '' : "?#{query_string}"))]
+        [Net::HTTP::Get.new(uri.path + (query_string.empty? ? '' : "?#{query_string}"), header)]
       end
-    args[0].basic_auth(@user, @passwd)
 
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
@@ -83,8 +88,21 @@ class Bitbucket
     "/repositories/#{@repo_username}/#{@repo_slug}/pullrequests"
   end
 
-  def request_json(method, path, version, params)
-    res = http_request(method, base_uri(version) + path, params)
+  def authorize
+    path = 'https://bitbucket.org/site/oauth2/access_token'
+    json = request_json('post', path, grant_type: 'client_credentials')
+
+    raise StanderdError.new 'authorization failed' unless json[:access_token]
+
+    @auth = "Bearer #{json[:access_token]}"
+  end
+
+  def request_bitbucket(method, path, version, params = {})
+    request_json(method, base_uri(version) + path, params)
+  end
+
+  def request_json(method, path, params = {})
+    res = http_request(method, path, params)
     case res
     when Net::HTTPSuccess
       JSON.parse(res.body, symbolize_names: true)
@@ -104,26 +122,15 @@ else
   exit(1)
 end
 
-bitbucket = Bitbucket.new(repo_username, repo_slug, ENV['BITBUCKET_USER'], Base64.decode64(ENV['BITBUCKET_PASS']).chomp)
+bitbucket = Bitbucket.new(repo_username, repo_slug, ENV['CLIENT_ID'], ENV['CLIENT_SECRET'])
 pullreq_list = bitbucket.get_pullreq_list
 
 branch = `git branch -a --contains`.scan(%r{.*/(.+?)$})[0][0]
 pullreq = pullreq_list.find{|data| data[:source][:branch][:name] == branch}
 if pullreq
+  user = bitbucket.get_user
   comment_list = bitbucket.get_pullreq_comment(pullreq[:id])
-  comment = comment_list.find {|data| data[:user][:username] == ENV['BITBUCKET_USER']}
+  comment = comment_list.find {|data| data[:user][:username] == user[:username]}
 
-  errors = File.open(ARGV[0]) do |file|
-    content = file.read
-    content.empty? ? '' : ("\n\n```\n" + content + "\n```\n")
-  end
-  message =
-    if ARGV[1].to_i.nonzero?
-      ':x: このままではマージできません！'
-    elsif errors =~ /\[ERR\]/
-      ':warning: エラーが残っています。'
-    else
-      ':white_check_mark: マージしても問題ありません！'
-    end
-  bitbucket.send_pullreq_comment(pullreq[:id], message + errors, comment)
+  bitbucket.send_pullreq_comment(pullreq[:id], ARGF.read, comment)
 end
