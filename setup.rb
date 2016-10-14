@@ -8,6 +8,7 @@ require 'net/https'
 require 'io/console'
 require 'erb'
 require 'date'
+require 'fileutils'
 
 class Setup
   include Singleton
@@ -17,6 +18,7 @@ class Setup
   DOCUMENT_TEX_TEMPLATE = 'template/document.tex.erb'
   DOCUMENT_TEX_PATH = 'document.tex'
   ASSIGNEE_PATH = 'assignee.yml'
+  PIPELINES_PATH = 'bitbucket-pipelines.yml'
 
   def initialize
   end
@@ -51,6 +53,8 @@ class Setup
     end
 
     create_assignee_template(info[:ordinal])
+
+    ::FileUtils.mv("#{PIPELINES_PATH}.sample", PIPELINES_PATH)
   end
 
   def create_files(*dir)
