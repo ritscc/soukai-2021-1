@@ -4,27 +4,17 @@ box: timnn/texlive
 build:
     steps:
         - install-packages:
-            name: 'install language-pack-ja'
-            packages: 'language-pack-ja'
+            name: 'install curl'
+            packages: 'curl'
         - script:
-            name: 'set locale'
-            code: 'update-locale LANG=ja_JP.UTF-8'
-        - add-ssh-key:
-            keyname: 'KEY_FOR_SUBMODULE'
-            host: 'bitbucket.org'
-        - add-to-known_hosts:
-            hostname: 'bitbucket.org'
-            fingerprint: 'SHA256:zzXQOXSRBEiUtuE8AikJYKwbHaxvSc0ojez9YXaGp1A'
-            type: rsa
-        - script:
-            name: 'setup submodule'
-            code: 'git submodule update --init --recursive'
+            name: 'init and setup submodule'
+            code: 'ci-scripts/init.sh'
         - script:
             name: 'testing with ta9boh'
-            code: 'tools/test-and-comment.sh'
+            code: 'ci-scripts/test.sh'
         - script:
             name: 'building a pdf'
-            code: 'make pdf'
+            code: 'ci-scripts/build.sh'
 
 deploy:
     steps:
@@ -33,8 +23,4 @@ deploy:
             packages: 'curl'
         - script:
             name: 'deploy to slack'
-            code: !str |
-                url=$(git remote -v | sed -n -e "1s/^origin\s\+//g; 1s/\:/\//g; 1s/^git@/https:\/\//g; 1s/\.git.\+$//g; 1p;") &&
-                comment=$(git log -1 --date=iso --pretty="format:%ad : %s \"$url/commits/%H\"") &&
-                curl -F file=@build/document.pdf -F initial_comment="$comment" -F channels=#soukai -F token=$SLACK_TOKEN https://slack.com/api/files.upload \
-                | grep -v "\"ok\":false"
+            code: 'ci-scripts/deploy-slack.sh'

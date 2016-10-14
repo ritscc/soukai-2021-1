@@ -9,6 +9,7 @@ pipelines:
   default:
     - step:
         script:
+          - ci-scripts/install-package.sh curl
           - ci-scripts/init.sh
           - ci-scripts/test.sh
           - ci-scripts/build.sh
@@ -16,6 +17,7 @@ pipelines:
     master:
         - step:
             script:
+              - ci-scripts/install-package.sh curl
               - ci-scripts/init.sh
               - ci-scripts/test.sh
               - ci-scripts/build.sh
@@ -23,8 +25,8 @@ pipelines:
     develop:
         - step:
             script:
+              - ci-scripts/install-package.sh curl
               - ci-scripts/init.sh
               - ci-scripts/test.sh
               - ci-scripts/build.sh
               - ci-scripts/deploy-slack.sh
-
