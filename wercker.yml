@@ -4,24 +4,17 @@ box: timnn/texlive
 build:
     steps:
         - install-packages:
-            name: 'install make ruby'
-            packages: 'make ruby'
-        - add-ssh-key:
-            keyname: 'KEY_FOR_SUBMODULE'
-            host: 'bitbucket.org'
-        - add-to-known_hosts:
-            hostname: 'bitbucket.org'
-            fingerprint: '97:8c:1b:f2:6f:14:6b:5c:3b:ec:aa:46:46:74:7c:40'
-            type: rsa
+            name: 'install curl'
+            packages: 'curl'
         - script:
-            name: 'setup submodule'
-            code: 'git submodule update --init --recursive'
+            name: 'init and setup submodule'
+            code: 'ci-scripts/init.sh'
         - script:
             name: 'testing with ta9boh'
-            code: 'tools/test-and-comment.sh'
+            code: 'ci-scripts/test.sh'
         - script:
             name: 'building a pdf'
-            code: 'make pdf'
+            code: 'ci-scripts/build.sh'
 
 deploy:
     steps:
@@ -30,8 +23,4 @@ deploy:
             packages: 'curl'
         - script:
             name: 'deploy to slack'
-            code: !str |
-                url=$(git remote -v | sed -n -e "1s/^origin\s\+//g; 1s/\:/\//g; 1s/^git@/https:\/\//g; 1s/\.git.\+$//g; 1p;") &&
-                comment=$(git log -1 --date=iso --pretty="format:%ad : %s \"$url/commits/%H\"") &&
-                curl -F file=@build/document.pdf -F initial_comment="$comment" -F channels=#soukai -F token=$SLACK_TOKEN https://slack.com/api/files.upload \
-                | grep -v "\"ok\":false"
+            code: 'ci-scripts/deploy-slack.sh'

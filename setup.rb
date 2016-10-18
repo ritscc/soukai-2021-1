@@ -8,6 +8,7 @@ require 'net/https'
 require 'io/console'
 require 'erb'
 require 'date'
+require 'fileutils'
 
 class Setup
   include Singleton
@@ -17,6 +18,7 @@ class Setup
   DOCUMENT_TEX_TEMPLATE = 'template/document.tex.erb'
   DOCUMENT_TEX_PATH = 'document.tex'
   ASSIGNEE_PATH = 'assignee.yml'
+  PIPELINES_PATH = 'bitbucket-pipelines.yml'
 
   def initialize
   end
@@ -38,7 +40,7 @@ class Setup
     info[:ordinal_kanji] = (info[:ordinal].to_i == 1 ? '一' : '二')
     info[:semester] = (info[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
     info[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
-    info[:repo_name] = "soukai-#{info[:current_year]}-#{info[:ordinal]}"
+    info[:repo_name] = "soukai-#{info[:fiscal_year]}-#{info[:ordinal]}"
 
     readme = ERB.new(File.read(README_TEMPLATE))
     File.write(README_PATH, readme.result(binding))
@@ -51,6 +53,8 @@ class Setup
     end
 
     create_assignee_template(info[:ordinal])
+
+    ::FileUtils.mv("#{PIPELINES_PATH}.sample", PIPELINES_PATH)
   end
 
   def create_files(*dir)
@@ -78,44 +82,47 @@ class Setup
 # RCC 自動生成用テンプレート
 # 【書式】 filename: タイトル, 姓 名, BitbucketID
 # （例）1kai: 1回生総括, RCC 太郎, RCC_Tarou
+#
+# 回生別のファイル名は変更しないでください
+# それ以外のファイル名は先頭に数字を付けることで、順番を制御できます
 ---
 hajimeni: はじめに,
 soukatsu:
   zentai:
-    zentai: #{ordinal == 1 ? '前期' : '後期'}活動総括,
-    unei: 運営総括,
+    1_zentai: #{ordinal == 1 ? '前期' : '後期'}活動総括,
+    2_unei: 運営総括,
   1kai: 1回生総括,
   2kai: 2回生総括,
   3kai: 3回生総括,
   4kai: 4回生総括,
   kaikei:
-#    zentai: 全体総括,
+#    1_zentai: 全体総括,
   kensui:
-#    zentai: 全体総括,
+#    1_zentai: 全体総括,
   syogai:
-#    zentai: 全体総括,
+#    1_zentai: 全体総括,
   system:
-#    zentai: 全体総括,
+#    1_zentai: 全体総括,
   soumu:
-#    zentai: 全体総括,
+#    1_zentai: 全体総括,
 houshin:
   zentai:
-    zentai: #{ordinal == 2 ? '前期' : '後期'}活動方針,
-    unei: 運営方針,
+    1_zentai: #{ordinal == 2 ? '前期' : '後期'}活動方針,
+    2_unei: 運営方針,
   1kai: #{ordinal == 2 ? '新' : ''}1回生方針,
   2kai: #{ordinal == 2 ? '新' : ''}2回生方針,
   3kai: #{ordinal == 2 ? '新' : ''}3回生方針,
   4kai: #{ordinal == 2 ? '新' : ''}4回生方針,
   kaikei:
-#    zentai: 全体方針,
+#    1_zentai: 全体方針,
   kensui:
-#    zentai: 全体方針,
+#    1_zentai: 全体方針,
   syogai:
-#    zentai: 全体方針,
+#    1_zentai: 全体方針,
   system:
-#    zentai: 全体方針,
+#    1_zentai: 全体方針,
   soumu:
-#    zentai: 全体方針,
+#    1_zentai: 全体方針,
     EOS
 
     [
