@@ -27,6 +27,6 @@ EOS
 )"
 fi
 
-ruby tools/comment-pullreq.rb <<<"$content"
+bitbucket_pr_commnet <<<"$content"
 rm $t
 exit $status

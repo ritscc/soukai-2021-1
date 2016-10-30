@@ -24,3 +24,6 @@ cat .gitmodules.org | sed s/:/\\// | sed s/git@/https:\\/\\// > .gitmodules
 
 # install submodule
 git submodule update --init --recursive
+
+# install bitbucket_pr_commnet
+gem install bitbucket_pr_commnet
