@@ -1,5 +1,8 @@
 #/bin/bash
 
+# set locale
+update-locale LANG=ja_JP.UTF-8
+
 # get bitbucket token
 token="$(curl -s https://bitbucket.org/site/oauth2/access_token \
     -d grant_type=client_credentials \

@@ -4,8 +4,8 @@ box: timnn/texlive
 build:
     steps:
         - install-packages:
-            name: 'install curl'
-            packages: 'curl'
+            name: 'install curl language-pack-ja'
+            packages: 'curl language-pack-ja'
         - script:
             name: 'init and setup submodule'
             code: 'ci-scripts/init.sh'
