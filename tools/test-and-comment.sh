@@ -28,6 +28,6 @@ EOS
 )"
 fi
 
-bitbucket_pr_commnet <<<"$content"
+bitbucket_pr_comment <<<"$content"
 rm $t
 exit $status
