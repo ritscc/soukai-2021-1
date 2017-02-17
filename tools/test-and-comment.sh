@@ -1,4 +1,5 @@
 #!/bin/bash
+export LC_ALL="ja_JP.UTF-8"
 t=`mktemp`
 OPTION=--log-level=3 make test > $t
 status=$?
@@ -27,6 +28,6 @@ EOS
 )"
 fi
 
-ruby tools/comment-pullreq.rb <<<"$content"
+bitbucket_pr_comment <<<"$content"
 rm $t
 exit $status

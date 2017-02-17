@@ -1,5 +1,8 @@
 #/bin/bash
 
+# set locale
+update-locale LANG=ja_JP.UTF-8
+
 # get bitbucket token
 token="$(curl -s https://bitbucket.org/site/oauth2/access_token \
     -d grant_type=client_credentials \
@@ -24,3 +27,6 @@ cat .gitmodules.org | sed s/:/\\// | sed s/git@/https:\\/\\// > .gitmodules
 
 # install submodule
 git submodule update --init --recursive
+
+# install bitbucket_pr_comment
+gem install bitbucket_pr_comment
