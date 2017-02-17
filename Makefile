@@ -27,11 +27,11 @@ all: $(BUILDED_TARGET).dvi
 pdf: $(BUILDED_TARGET).pdf
 
 git:
-	git checkout $(BRANCH)
+	@git checkout $(BRANCH) > /dev/null
 
-	git submodule init
-	git submodule update
-	git submodule foreach 'git checkout $(SUBMODULE_BRANCH)'
+	@git submodule init > /dev/null
+	@git submodule update > /dev/null
+	@git submodule foreach 'git checkout $(SUBMODULE_BRANCH)' > /dev/null
 
 $(BUILDED_TARGET).dvi: $(TARGET).tex git
 	mkdir -p $(OUTPUT_DIR)
