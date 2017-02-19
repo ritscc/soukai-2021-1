@@ -9,6 +9,7 @@ BRANCH = HEAD
 SUBMODULE_BRANCH = master
 
 YEAR = $(shell cat README.md | head -n 1 | sed -e 's/^\([0-9]*\).*/\1/')
+TEST_TARGET = $(shell ls src/*/?kai.tex src/hajimeni.tex) $(shell ruby tools/auto_input.rb show)
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -55,4 +56,4 @@ test: git
 	@mkdir -p $(OUTPUT_DIR)
 	@ruby tools/auto_input.rb
 	@$(PLATEX) -interaction=nonstopmode -output-directory=$(OUTPUT_DIR) $(TARGET).tex > /dev/null || (ruby tools/filter-error.rb $(BUILDED_TARGET).log && false)
-	@ruby tools/auto_input.rb show | YEAR=$(YEAR) xargs ruby ta9boh/ta9boh.rb $(OPTION)
+	@echo $(TEST_TARGET) | YEAR=$(YEAR) xargs ruby ta9boh/ta9boh.rb $(OPTION)
