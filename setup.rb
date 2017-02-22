@@ -34,9 +34,9 @@ class Setup
     info[:last_year] = info[:fiscal_year] - 1
     info[:next_year] = info[:fiscal_year] + 1
     info[:heisei] = info[:date].year - 1988
-    info[:ordinal] = get_value('第何回目?', ((4..9).include?(info[:date].month) ? 1 : 2))
-    info[:ordinal_kanji] = (info[:ordinal].to_i == 1 ? '一' : '二')
-    info[:semester] = (info[:ordinal].to_i == 1 ? '\zenki' : '\kouki')
+    info[:ordinal] = get_value('第何回目?', ((4..9).include?(info[:date].month) ? 1 : 2)).to_i
+    info[:ordinal_kanji] = (info[:ordinal] == 1 ? '一' : '二')
+    info[:semester] = (info[:ordinal] == 1 ? '\zenki' : '\kouki')
     info[:wercker_badge] = get_value('WerckerのShare Badge （Markdown表記）', '')
     info[:repo_name] = "soukai-#{info[:fiscal_year]}-#{info[:ordinal]}"
 
