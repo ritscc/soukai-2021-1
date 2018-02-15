@@ -1,0 +1,21 @@
+version: 2.0.0
+project:
+    date: 2017-08-20
+    times: 1
+bitbucket:
+    username: ritscc
+    repo_slug: soukai-2017-01
+assignees:
+    rcc_taro:
+        name: RCC 太郎
+        bitbucket_user: rcc_taro
+    rcc_jiro:
+        name: RCC 次朗
+        bitbucket_user: rcc_jiro_dayo
+documents:
+    - src: houshin/zentai.tex
+      title: 全体方針
+      assignee: rcc_taro
+    - src: houshin/system/
+      title: 全体方針
+      assignee: rcc_jiro

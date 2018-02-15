@@ -17,7 +17,6 @@ module Bitbucket
 
     # クライアント
     class ClientService
-
       def initialize(api_version, credential, open_timeout = 60, read_timeout = 60)
         unless APIVersion::is_valid_version?(api_version)
           throw ArgumentError, "#{api_version}は不正なAPIバージョンです。指定できるのは、#{APIVersion::VALID_API_VERSIONS.join(", ")}のいずれかです。"
@@ -29,6 +28,7 @@ module Bitbucket
         @read_timeout = read_timeout
       end
 
+      private
       def request(request, response_class)
         path = "/#{@api_version}" + request.path
 
@@ -43,7 +43,7 @@ module Bitbucket
           when :PATCH
             Net::HTTP::Patch.new(path)
           else
-            throw ArgumentError, "#{self.method}は、許可されていないメソッドです"
+            throw ArgumentError, "#{self.method}は、許可されていないHTTPメソッドです。"
           end
 
         http_request["Content-Type"] = 'application/json'
@@ -53,7 +53,7 @@ module Bitbucket
         if [:username, :password].all? {|m| @credential.methods.include?(m) }
           http_request.basic_auth(@credential.username, @credential.password)
         else
-          throw TypeError, "認証情報に期待するメソッドが存在しません"
+          throw TypeError, "認証情報に期待するメソッドが存在しません。"
         end
 
         http_response = http_client.request(http_request)
@@ -61,7 +61,6 @@ module Bitbucket
         response_class.from_http_response http_response
       end
 
-      private
       def http_client
         if @client.nil?
           @client = Net::HTTP.new("api.bitbucket.org", Net::HTTP.https_default_port)
@@ -75,32 +74,35 @@ module Bitbucket
       end
     end
 
-    # 一般化された要求
+    # パスワード認証情報
+    #
+    # このクラスを使用する際は、ユーザ自体のパスワードではなく、
+    # 用途ごとに生成できるアプリパスワードの利用を推奨します。
+    class PasswordCredential
+      attr_reader :username, :password
+
+      def initialize(username, password)
+        @username = username
+        @password = password
+      end
+    end
+
+    # 一般リクエスト
     class GenericRequest
+      attr_reader :method, :path, :body
+
       def initialize(method, path, body)
         @method = method.to_s.upcase.to_sym
         @path = path.to_s
         @body = body.to_s
       end
-
-      attr_reader :method, :path, :body
     end
 
-    # 一般化された応答
+    # 一般レスポンス
     class GenericResponse
     end
 
-    # パスワード認証情報
-    class PasswordCredential
-      def initialize(username, password)
-        @username = username
-        @password = password
-      end # PasswordCredential
-
-      attr_reader :username, :password
-    end
-
-    # 課題作成要求
+    # 課題作成リクエスト
     class IssueCreateRequest < GenericRequest
       def initialize(repository, issue)
         @repository = repository
@@ -138,91 +140,9 @@ module Bitbucket
         puts http_response.body
         # todo implement
       end
-    end
-  end
 
-  # ユーザ
-  class User
-    def initialize(username)
-      @username = username
-    end
-
-    attr_reader :username
-  end
-
-  # リポジトリ
-  class Repository
-    def initialize(user, repo_slug)
-      @user  = user
-      @repo_slug = repo_slug
-    end
-
-    attr_accessor :user, :repo_slug
-  end
-
-  # 課題
-  class Issue
-    # 状態
-    class State
-      def initialize(string: )
-        @string = string
+      def initialize()
       end
-
-      def to_s
-        @string
-      end
-
-      NEW = self.new(string: 'new').freeze
-
-      private_class_method :new
     end
-
-    # 優先度
-    class Priority
-      def initialize(string: )
-        @string = string
-      end
-
-      def to_s
-        @string
-      end
-
-      TRIVIAL  = self.new(string: 'trivial').freeze
-      MINOR    = self.new(string: 'minor').freeze
-      MAJOR    = self.new(string: 'major').freeze
-      CRITICAL = self.new(string: 'critical').freeze
-      BLOCKER  = self.new(string: 'blocker').freeze
-
-      private_class_method :new
-    end
-
-    # 種別
-    class Kind
-      def initialize(string: )
-        @string = string
-      end
-
-      def to_s
-        @string
-      end
-
-      BUG         = self.new(string: 'bug').freeze
-      ENHANCEMENT = self.new(string: 'enchancement').freeze
-      PROPOSAL    = self.new(string: 'proposal').freeze
-      TASK        = self.new(string: 'task').freeze
-
-      private_class_method :new
-    end
-
-    def initialize(title, content = nil, responsible = nil, state = State::NEW, priority = Priority::MAJOR, kind = Kind::TASK)
-      @title       = title
-      @content     = content
-      @responsible = responsible
-      @state       = state
-      @priority    = priority
-      @kind        = kind
-    end
-
-    attr_reader :title, :content, :responsible, :state, :priority, :kind
   end
 end

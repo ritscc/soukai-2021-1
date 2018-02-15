@@ -1,22 +1,21 @@
 require 'erb'
+require 'pathname'
 
 module Template
   class GenericTemplate
     TEMPLATE_BASE_PATH = Pathname.new('../template')
 
-    def initialize(path, template_path)
-      @path = path
+    def initialize(template_path)
       @template_path = template_path
     end
 
-    def save
+    def save(path)
       File.open(@path, "w") do |file|
-        file << self.build_tex
+        file << self.build
       end
     end
 
-    private
-    def build_tex
+    def build
       template = ERB.new File.read(@template_path)
       template.result(binding)
     end
@@ -26,16 +25,10 @@ module Template
   class DocumentTemplate < GenericTemplate
     PATH = TEMPLATE_BASE_PATH + 'document.tex.erb'
 
-    def initialize(path, template_path = PATH)
-      super(path, template_path)
-    end
+    attr_writer :date
 
-    def title=(title)
-      @title = title
-    end
-
-    def date=(date)
-      @date = date
+    def initialize(template_path = PATH)
+      super(template_path)
     end
   end
 
@@ -43,16 +36,10 @@ module Template
   class SubSectionTemplate < GenericTemplate
     PATH = TEMPLATE_BASE_PATH + 'section.tex.erb'
 
-    def initialize(path, template_path = PATH)
-      super(path, template_path)
-    end
+    attr_writer :title, :assignee
 
-    def title=(assginee)
-      @title = assignee
-    end
-
-    def assignee=(assginee)
-      @assignee = assignee
+    def initialize(template_path = PATH)
+      super(template_path)
     end
   end
 
@@ -60,16 +47,10 @@ module Template
   class ReadmeTemplate < GenericTemplate
     PATH = TEMPLATE_BASE_PATH + 'README.md.erb'
 
-    def initialize(path, template_path = PATH)
-      super(path, template_path)
-    end
+    attr_writer :date, :repository
 
-    def date=(date)
-      @date = date
-    end
-
-    def repository=(repository)
-      @repository = repository
+    def initialize(template_path = PATH)
+      super(template_path)
     end
   end
 end

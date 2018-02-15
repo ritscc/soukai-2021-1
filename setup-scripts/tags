@@ -1,0 +1,107 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+APIVersion	lib/bitbucket.rb	/^    module APIVersion$/;"	m	class:Bitbucket.Client
+Assignee	lib/model/assignee.rb	/^  class Assignee$/;"	c	class:Assignee
+Assignee	lib/model/assignee.rb	/^module Assignee$/;"	m
+Assignees	lib/model/assignee.rb	/^  class Assignees$/;"	c	class:Assignee
+AssigneesConfig	lib/config.rb	/^class AssigneesConfig$/;"	c
+Bitbucket	lib/bitbucket.rb	/^module Bitbucket$/;"	m
+BitbucketConfig	lib/config.rb	/^class BitbucketConfig$/;"	c
+Client	lib/bitbucket.rb	/^  module Client$/;"	m	class:Bitbucket
+ClientService	lib/bitbucket.rb	/^    class ClientService$/;"	c	class:Bitbucket.Client
+Config	lib/config.rb	/^class Config$/;"	c
+Department	lib/model/assignee.rb	/^  class Department$/;"	c	class:Assignee
+DocumentTemplate	lib/template.rb	/^  class DocumentTemplate < GenericTemplate$/;"	c
+DocumentsConfig	lib/config.rb	/^class DocumentsConfig$/;"	c
+GeneralMeeting	lib/model/general_meeting.rb	/^  class GeneralMeeting$/;"	c	class:GeneralMeeting
+GeneralMeeting	lib/model/general_meeting.rb	/^module GeneralMeeting$/;"	m
+GenericRequest	lib/bitbucket.rb	/^    class GenericRequest$/;"	c	class:Bitbucket.Client
+GenericResponse	lib/bitbucket.rb	/^    class GenericResponse$/;"	c	class:Bitbucket.Client
+GenericTemplate	lib/template.rb	/^  class GenericTemplate$/;"	c	class:Template
+Grade	lib/model/assignee.rb	/^  class Grade$/;"	c	class:Assignee
+InitializerService	lib/service/initialize_service.rb	/^class InitializerService$/;"	c
+Issue	lib/bitbucket.rb	/^  class Issue$/;"	c	class:Bitbucket
+IssueCreateRequest	lib/bitbucket.rb	/^    class IssueCreateRequest < GenericRequest$/;"	c	class:Bitbucket.Client
+IssueCreateResponse	lib/bitbucket.rb	/^    class IssueCreateResponse < GenericResponse$/;"	c	class:Bitbucket.Client
+JapaneseEra	lib/model/general_meeting.rb	/^  class JapaneseEra$/;"	c	class:GeneralMeeting
+Kind	lib/bitbucket.rb	/^    class Kind$/;"	c	class:Bitbucket.Issue
+MeetingDate	lib/model/general_meeting.rb	/^  class MeetingDate$/;"	c	class:GeneralMeeting
+Name	lib/model/assignee.rb	/^  class Name$/;"	c	class:Assignee
+PasswordCredential	lib/bitbucket.rb	/^    class PasswordCredential$/;"	c	class:Bitbucket.Client
+Position	lib/model/assignee.rb	/^  class Position$/;"	c	class:Assignee
+Post	lib/model/assignee.rb	/^  class Post$/;"	c	class:Assignee
+Priority	lib/bitbucket.rb	/^    class Priority$/;"	c	class:Bitbucket.Issue
+ProjectConfig	lib/config.rb	/^class ProjectConfig$/;"	c
+ReadmeTemplate	lib/template.rb	/^  class ReadmeTemplate < GenericTemplate$/;"	c
+Repository	lib/bitbucket.rb	/^  class Repository$/;"	c	class:Bitbucket
+State	lib/bitbucket.rb	/^    class State$/;"	c	class:Bitbucket.Issue
+SubSectionTemplate	lib/template.rb	/^  class SubSectionTemplate < GenericTemplate$/;"	c
+Template	lib/template.rb	/^module Template$/;"	m
+User	lib/bitbucket.rb	/^  class User$/;"	c	class:Bitbucket
+[]	lib/model/assignee.rb	/^    def [](key)$/;"	f	class:Assignee.Assignees
+body	lib/bitbucket.rb	/^      def body$/;"	f	class:Bitbucket.Client.IssueCreateRequest
+build	lib/template.rb	/^    def build$/;"	f	class:Template
+era_year_of	lib/model/general_meeting.rb	/^    def era_year_of(date)$/;"	f	class:GeneralMeeting.JapaneseEra
+format_year	lib/model/general_meeting.rb	/^    def format_year(date)$/;"	f	class:GeneralMeeting.JapaneseEra
+format_year	lib/model/general_meeting.rb	/^    def self.format_year(date)$/;"	F	class:GeneralMeeting.JapaneseEra
+from	lib/model/assignee.rb	/^    def self.from(department)$/;"	F	class:Assignee.Department
+from	lib/model/assignee.rb	/^    def self.from(post)$/;"	F	class:Assignee.Post
+from	lib/model/general_meeting.rb	/^    def self.from(date)$/;"	F	class:GeneralMeeting.JapaneseEra
+from_file	lib/config.rb	/^  def self.from_file(file)$/;"	F	class:Config
+from_hash	lib/config.rb	/^  def self.from_hash(config)$/;"	F	class:AssigneesConfig
+from_hash	lib/config.rb	/^  def self.from_hash(hash)$/;"	F	class:BitbucketConfig
+from_hash	lib/config.rb	/^  def self.from_hash(hash)$/;"	F	class:DocumentsConfig
+from_hash	lib/config.rb	/^  def self.from_hash(hash)$/;"	F	class:ProjectConfig
+from_http_response	lib/bitbucket.rb	/^      def self.from_http_response(response)$/;"	F	class:Bitbucket.Client.IssueCreateResponse
+has_post?	lib/model/assignee.rb	/^    def has_post?(post)$/;"	f	class:Assignee.Department
+http_client	lib/bitbucket.rb	/^      def http_client$/;"	f	class:Bitbucket.Client.ClientService
+include?	lib/model/general_meeting.rb	/^    def include?(date)$/;"	f	class:GeneralMeeting.JapaneseEra
+initialize	lib/bitbucket.rb	/^      def initialize(api_version, credential, open_timeout = 60, read_timeout = 60)$/;"	f	class:Bitbucket.Client.ClientService
+initialize	lib/bitbucket.rb	/^      def initialize(method, path, body)$/;"	f	class:Bitbucket.Client.GenericRequest
+initialize	lib/bitbucket.rb	/^      def initialize(repository, issue)$/;"	f	class:Bitbucket.Client.IssueCreateRequest
+initialize	lib/bitbucket.rb	/^      def initialize(string: )$/;"	f	class:Bitbucket.Issue.Kind
+initialize	lib/bitbucket.rb	/^      def initialize(string: )$/;"	f	class:Bitbucket.Issue.Priority
+initialize	lib/bitbucket.rb	/^      def initialize(string: )$/;"	f	class:Bitbucket.Issue.State
+initialize	lib/bitbucket.rb	/^      def initialize(username, password)$/;"	f	class:Bitbucket.Client.PasswordCredential
+initialize	lib/bitbucket.rb	/^    def initialize(title, content = nil, responsible = nil, state = State::NEW, priority = Priority::MAJOR, kind = Kind::TASK)$/;"	f	class:Bitbucket.Issue
+initialize	lib/bitbucket.rb	/^    def initialize(user, repo_slug)$/;"	f	class:Bitbucket.Repository
+initialize	lib/bitbucket.rb	/^    def initialize(username)$/;"	f	class:Bitbucket.User
+initialize	lib/config.rb	/^  def initialize()$/;"	f	class:DocumentsConfig
+initialize	lib/config.rb	/^  def initialize(assignees)$/;"	f	class:AssigneesConfig
+initialize	lib/config.rb	/^  def initialize(config)$/;"	f	class:Config
+initialize	lib/config.rb	/^  def initialize(repository, credential)$/;"	f	class:BitbucketConfig
+initialize	lib/config.rb	/^  def initialize(times, date)$/;"	f	class:ProjectConfig
+initialize	lib/model/assignee.rb	/^    def initialize(assignees)$/;"	f	class:Assignee.Assignees
+initialize	lib/model/assignee.rb	/^    def initialize(department, post)$/;"	f	class:Assignee.Position
+initialize	lib/model/assignee.rb	/^    def initialize(family_name, first_name)$/;"	f	class:Assignee.Name
+initialize	lib/model/assignee.rb	/^    def initialize(grade)$/;"	f	class:Assignee.Grade
+initialize	lib/model/assignee.rb	/^    def initialize(name, grade, position, bitbucket_user = nil)$/;"	f	class:Assignee.Assignee
+initialize	lib/model/assignee.rb	/^    def initialize(tex_postfix: )$/;"	f	class:Assignee.Post
+initialize	lib/model/assignee.rb	/^    def initialize(tex_prefix: , allowed_posts: )$/;"	f	class:Assignee.Department
+initialize	lib/model/general_meeting.rb	/^    def initialize(date)$/;"	f	class:GeneralMeeting.MeetingDate
+initialize	lib/model/general_meeting.rb	/^    def initialize(date, times)$/;"	f	class:GeneralMeeting.GeneralMeeting
+initialize	lib/model/general_meeting.rb	/^    def initialize(start_date: , end_date: , kanji: )$/;"	f	class:GeneralMeeting.JapaneseEra
+initialize	lib/template.rb	/^    def initialize(path, template_path = PATH)$/;"	f	class:DocumentTemplate
+initialize	lib/template.rb	/^    def initialize(template_path = PATH)$/;"	f	class:ReadmeTemplate
+initialize	lib/template.rb	/^    def initialize(template_path = PATH)$/;"	f	class:SubSectionTemplate
+initialize	lib/template.rb	/^    def initialize(template_path)$/;"	f	class:Template.GenericTemplate
+initialize_project	lib/service/initialize_service.rb	/^  def initialize_project(config)$/;"	f	class:InitializerService
+is_first_semester?	lib/model/general_meeting.rb	/^    def is_first_semester?$/;"	f	class:GeneralMeeting.MeetingDate
+is_second_semester?	lib/model/general_meeting.rb	/^    def is_second_semester?$/;"	f	class:GeneralMeeting.MeetingDate
+is_valid_version?	lib/bitbucket.rb	/^      def is_valid_version?(version)$/;"	f	class:Bitbucket.Client.APIVersion
+japanese_era_year	lib/model/general_meeting.rb	/^    def japanese_era_year$/;"	f	class:GeneralMeeting.MeetingDate
+method	lib/bitbucket.rb	/^      def method$/;"	f	class:Bitbucket.Client.IssueCreateRequest
+path	lib/bitbucket.rb	/^      def path$/;"	f	class:Bitbucket.Client.IssueCreateRequest
+request	lib/bitbucket.rb	/^      def request(request, response_class)$/;"	f	class:Bitbucket.Client.ClientService
+save	lib/template.rb	/^    def save(path)$/;"	f	class:Template.GenericTemplate
+to_s	lib/bitbucket.rb	/^      def to_s$/;"	f	class:Bitbucket.Issue.Kind
+to_s	lib/bitbucket.rb	/^      def to_s$/;"	f	class:Bitbucket.Issue.Priority
+to_s	lib/bitbucket.rb	/^      def to_s$/;"	f	class:Bitbucket.Issue.State
+to_tex	lib/model/assignee.rb	/^    def to_tex$/;"	f	class:Assignee.Grade
+to_tex	lib/model/assignee.rb	/^    def to_tex$/;"	f	class:Assignee.Position
+to_tex_with_grade	lib/model/assignee.rb	/^    def to_tex_with_grade$/;"	f	class:Assignee.Assignee
+to_tex_with_position	lib/model/assignee.rb	/^    def to_tex_with_position$/;"	f	class:Assignee.Assignee
