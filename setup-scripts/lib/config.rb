@@ -2,12 +2,14 @@
 
 require 'yaml'
 require 'pathname'
+require_relative 'model/general_meeting.rb'
 require_relative 'model/repository.rb'
 require_relative 'model/assignee.rb'
 require_relative 'model/document.rb'
 
 # 一般的な設定
 class ProjectConfig
+  include ::Model::GeneralMeeting
   attr_reader :times, :date
 
   # ハッシュから設定を生成する
@@ -15,24 +17,30 @@ class ProjectConfig
     case version = hash['version']
     when "2.0.0"
       config = hash['project']
-      times, date = config.fetch_values('times', 'date')
+      date, times = config.fetch_values('date', 'times')
 
-      self.new(times, date)
+      self.new(date, times)
     else
       throw ArgumentError, "未対応のバージョンです: #{version}"
     end
   end
 
-  # @param times [Integer] 第何回目かを表す数値
   # @param date [String, Time, Date] 日付
-  def initialize(times, date)
-    @times = times
-    @date = case date.class
+  # @param times [Integer, NilClass] 第何回目かを表す数値
+  def initialize(date, times)
+    date_obj = case date.class
       when String then Date.parse date
       when Time   then date.to_date
       when Date   then date
       else Date.parse date.to_s
       end
+    @date = MeetingDate.new(date_obj)
+    @times = times || case
+    when @date.is_first_semester?  then 1
+    when @date.is_second_semester? then 2
+    else
+      throw RuntimeError, ""
+    end
   end
 end
 
@@ -138,7 +146,7 @@ class DocumentsConfig
 end
 
 class Config
-  attr_reader #:project_config, :documents_config
+  attr_reader :project_config, :documents_config, :assignees_config, :bitbucket_config
 
   def self.from_io(io)
     hash = YAML::load(io)

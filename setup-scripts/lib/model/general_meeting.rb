@@ -78,6 +78,10 @@ module Model::GeneralMeeting
       era.format_year(date)
     end
 
+    def self.format_date(date)
+      "#{self.format_year(date)}" + date.strftime("%m月%d日")
+    end
+
     private_class_method :new
 
     SHOWA  = new start_date: Date.new(1926, 12, 25), end_date: Date.new(1989, 1,  7), kanji: '昭和'
@@ -94,8 +98,20 @@ module Model::GeneralMeeting
       @date = date.to_date
     end
 
-    def japanese_era_year
+    def to_s
+      @date.strftime("%Y-%m-%d %a")
+    end
+
+    def format_japanese_date
       JapaneseEra.format_date(@date)
+    end
+
+    def fiscal_year
+      @date.year - (@date.month < 4 ? 1 : 0)
+    end
+
+    def fiscal_japanese_year
+      JapaneseEra.format_year(@date)
     end
 
     # 前期
@@ -105,7 +121,18 @@ module Model::GeneralMeeting
 
     # 後期
     def is_second_semester?
-      [10..12, 1..3].any? {|range| range.include? @date.month }
+      not self.is_first_semester?
+    end
+
+    def semester
+      case
+      when is_first_semester?
+        "前期"
+      when is_second_semester?
+        "後期"
+      else
+        throw RuntimeError, "実装に問題があります: 学期の算出処理が正しくありません"
+      end
     end
   end
 end
