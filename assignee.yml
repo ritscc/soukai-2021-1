@@ -8,14 +8,19 @@ bitbucket:
 assignees:
     rcc_taro:
         name: RCC 太郎
-        bitbucket_user: rcc_taro
+        bitbucket_user: rcc_taro_desu
+        grade: 3
+        department: 執行部
+        post: 執行委員長
     rcc_jiro:
         name: RCC 次朗
         bitbucket_user: rcc_jiro_dayo
+        department: system
+        post: staff
 documents:
-    - src: houshin/zentai.tex
+    - path: houshin/zentai.tex
       title: 全体方針
       assignee: rcc_taro
-    - src: houshin/system/
+    - path: houshin/system/
       title: 全体方針
       assignee: rcc_jiro

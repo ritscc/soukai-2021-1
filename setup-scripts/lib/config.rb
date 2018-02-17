@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 require 'yaml'
+require 'pathname'
 require_relative 'model/repository.rb'
 require_relative 'model/assignee.rb'
+require_relative 'model/document.rb'
 
 # 一般的な設定
 class ProjectConfig
@@ -8,17 +12,22 @@ class ProjectConfig
 
   # ハッシュから設定を生成する
   def self.from_hash(hash)
-    times, date = hash.values_at('times', 'date')
+    case version = hash['version']
+    when "2.0.0"
+      config = hash['project']
+      times, date = config.fetch_values('times', 'date')
 
-    self.new(times, date)
+      self.new(times, date)
+    else
+      throw ArgumentError, "未対応のバージョンです: #{version}"
+    end
   end
 
   # @param times [Integer] 第何回目かを表す数値
   # @param date [String, Time, Date] 日付
   def initialize(times, date)
     @times = times
-    @date =
-      case date.class
+    @date = case date.class
       when String then Date.parse date
       when Time   then date.to_date
       when Date   then date
@@ -35,18 +44,17 @@ class BitbucketConfig
 
   # ハッシュから設定を生成する
   def self.from_hash(hash)
-    username, repo_slug = hash.values_at('username', 'repo_slug')
+    config = hash['bitbucket']
+
+    username, repo_slug = config.fetch_values('username', 'repo_slug')
 
     repository = Repository.new(User.new(username), repo_slug)
 
-    password_credential = hash.values_at('password_credential')
-
-    credential =
-      case
-      when password_credential
+    credential = case
+      when password_credential = config['password_credential']
         PasswordCredential.new(password_credential['username', 'password'])
       else
-        throw ArgumentError, "認証情報が不足しています。"
+        # throw ArgumentError, "認証情報が不足しています。"
       end
 
     self.new(repository, credential)
@@ -63,76 +71,89 @@ end
 # 担当者の設定
 class AssigneesConfig
   include ::Model::Assignee
+  include ::Model::Repository
+
+  attr_reader
 
   # ハッシュから設定を生成する
-  def self.from_hash(config)
-    assignees = {}
+  def self.from_hash(hash)
+    case version = hash['version']
+    when "2.0.0"
+      assignees = {}
 
-    config.each_pair.map do |key, info|
-      family_name, first_name = (
-        case
-        when info['family_name'] && info['first_name']
-          info.values_at('family_name', 'first_name')
-        when info['name']
-          info['name'].split(/\s|　/)
-        else
-          throw ArgumentError, "名前のフォーマットが間違っています: #{info}"
-        end
-      )
+      hash['assignees'].each_pair.map do |key, info|
 
-      name = Name.new(family_name, first_name)
+        name = Name.from_hash(info)
 
-      grade = Grade.new(info['grade'])
+        grade = info['grade']&.yield_self {|v| Grade.new(v) }
 
-      position = Position.new(
-        Department.from(info['department']),
-        Post.from(info['post'])
-      )
+        department = info['department']&.yield_self {|v| Department.from(v) }
+        post = info['post']&.yield_self {|v| Post.from(v) }
+        position = department && post && Position.new(department, post)
 
-      bitbucket_user =
-        info['bitbucket_user'] ? Bitbucket::User.new(info['bitbucket_user']) : nil
+        bitbucket_user = info['bitbucket_user']&.yield_self {|v| User.new(v) }
 
-      assignees[key] = Assignee.new(name, grade, position, bitbucket_user)
+        assignees[key] = Assignee.new(key, name, grade, position, bitbucket_user)
+      end
+
+      self.new(Assignees.new(assignees))
+    else
+      throw ArgumentError, "未対応のバージョンです: #{version}"
     end
-
-    self.new(assignees)
   end
 
   # @param assignees [Hash<String, Assignee>, Array<Assignee>] 担当者のマップまたはリスト
   def initialize(assignees)
-    @assignees = Assignees.new(assignees)
-  end
-
-  def each(&proc)
-    @assignees.each(&proc)
+    @assignees = assignees
   end
 end
 
+# 文書と担当者の設定
 class DocumentsConfig
   attr_reader
 
+  include ::Model::Assignee
+  include ::Model::Document
+
   def self.from_hash(hash)
+    case version = hash['version']
+    when "2.0.0"
+      documents_ary = hash['documents'].each do |doc|
+        path, title, assignee = doc.fetch_values('path', 'title', 'assignee')
+
+        next Document.new(path, title, assignee)
+      end
+
+      documents = Documents.new(documents_ary)
+
+      self.new(documents)
+    else
+      throw ArgumentError, "未対応のバージョンです: #{version}"
+    end
   end
 
-  def initialize()
+  def initialize(documents)
+    @documents = documents
   end
 end
 
 class Config
-  attr_reader :project_config, :documents_config
+  attr_reader #:project_config, :documents_config
 
-  def self.from_file(file)
-    file = File::open(file.to_s, "r") if not file.is_a? File
+  def self.from_io(io)
+    hash = YAML::load(io)
+    self.from_hash(hash)
+  end
 
-    config = YAML::load file.read
-
-    file.close
-
-    self.new(config)
+  def self.from_hash(hash)
+    self.new(hash)
   end
 
   def initialize(config)
-    @project_config = ProjectConfig.from_hash(config['project'])
-    @documents_config = DocumentsConfig.from_hash(config['documents'])
+    @version = config['version']
+    @project_config = ProjectConfig.from_hash(config)
+    @assignees_config = AssigneesConfig.from_hash(config)
+    @documents_config = DocumentsConfig.from_hash(config)
+    @bitbucket_config = BitbucketConfig.from_hash(config)
   end
 end

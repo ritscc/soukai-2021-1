@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/https'
 require 'json'
 
@@ -89,17 +91,24 @@ module Bitbucket
 
     # 一般リクエスト
     class GenericRequest
-      attr_reader :method, :path, :body
+      def method
+        throw NotImplementedError
+      end
 
-      def initialize(method, path, body)
-        @method = method.to_s.upcase.to_sym
-        @path = path.to_s
-        @body = body.to_s
+      def path
+        throw NotImplementedError
+      end
+
+      def body
+        throw NotImplementedError
       end
     end
 
     # 一般レスポンス
     class GenericResponse
+      def self.parse(response)
+        throw NotImplementedError
+      end
     end
 
     # 課題作成リクエスト
@@ -107,6 +116,7 @@ module Bitbucket
       def initialize(repository, issue)
         @repository = repository
         @issue = issue
+
       end
 
       def method
@@ -136,7 +146,7 @@ module Bitbucket
 
     # 課題作成応答
     class IssueCreateResponse < GenericResponse
-      def self.from_http_response(response)
+      def self.parse(response)
         puts http_response.body
         # todo implement
       end

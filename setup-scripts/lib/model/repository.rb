@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative 'model'
 
+# Bitbucket
 module Model::Repository
   # ユーザ
   class User
@@ -32,6 +35,10 @@ module Model::Repository
 
       def to_s
         @string
+      end
+
+      def inspect
+        @string.upcase
       end
 
       NEW = new(string: 'new').freeze

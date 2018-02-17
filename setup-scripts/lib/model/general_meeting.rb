@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'date'
 require_relative 'model'
 
@@ -39,9 +41,8 @@ module Model::GeneralMeeting
     # @param date [Date] 日付
     def format_year(date)
       year = self.era_year_of(date)
-      year =
-        if year.equal? 1
-        then '元年' 
+      year = if year.equal? 1
+        then '元年'
         else "#{year}年"
         end
 
@@ -81,8 +82,9 @@ module Model::GeneralMeeting
 
     SHOWA  = new start_date: Date.new(1926, 12, 25), end_date: Date.new(1989, 1,  7), kanji: '昭和'
     HEISEI = new start_date: Date.new(1989, 1, 8),   end_date: Date.new(2019, 4, 30), kanji: '平成'
+    NEW    = new start_date: Date.new(2019, 5, 1),   end_date: nil                  , kanji: '新年号'
 
-    ERAS = [ SHOWA, HEISEI ]
+    ERAS = [ SHOWA, HEISEI, NEW ]
   end
 
   # 総会開催日

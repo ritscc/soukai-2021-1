@@ -1,27 +1,38 @@
+# frozen_string_literal: true
+
 require_relative 'model'
 
 module Model::Assignee
   # 担当者を管理する
   class Assignees
+    extend Enumerable
+
     def initialize(assignees)
       @assignees =
         if assignees.is_a? Hash
           assignees.clone
         elsif assignees.is_a? Enumerable
           assignees.map{|assignee| [ assignee.name.format, assignee] }.to_h
+        else
+          throw TypeError.new("Enumerableではありません")
         end
     end
 
+    def each(&proc)
+      @assignees.each(&proc)
+    end
+
     def [](key)
-      @Assignees[key]
+      @assignees[key]
     end
   end
 
   # 担当者
   class Assignee
-    attr_reader :name, :grade, :position, :bitbucket_user
+    attr_reader :id, :name, :grade, :position, :bitbucket_user
 
-    def initialize(name, grade, position, bitbucket_user = nil)
+    def initialize(id, name, grade, position, bitbucket_user = nil)
+      @id = id
       @name = name
       @grade = grade
       @position = position
@@ -31,44 +42,51 @@ module Model::Assignee
 
   # 学年
   class Grade
-    attr_reader :grade
-
     # grade should be a integer
     def initialize(grade)
       throw ArgumentError, "学年は、Integerでなければなりません。"  unless grade.is_a? Integer
       throw ArgumentError, "学年は、1〜4の間でなければなりません。" unless (1..4).include? grade
       @grade = grade
     end
+
+    def to_i
+      @grade.to_i
+    end
   end
 
   # 役職
   class Post
     private_class_method :new
+    attr_reader :inspect
 
     def self.from(post)
       case post.to_s
-      when /president/i      then PRESIDENT
-      when /sub_?president/i then SUB_PRESIDENT
-      when /chief/i          then CHIEF
-      when /staff/i          then STAFF
+      when /president|執行委員長/i        then PRESIDENT
+      when /sub_?president|副執行委員長/i then SUB_PRESIDENT
+      when /chief|局長/i                  then CHIEF
+      when /staff|局員/i                  then STAFF
       else throw ArgumentError, "そのような役職は、存在しません: #{post}"
       end
     end
 
-    PRESIDENT     = new
-    SUB_PRESIDENT = new
-    CHIEF         = new
-    STAFF         = new
+    def initialize(inspect)
+      @inspect = inspect
+    end
+
+    PRESIDENT     = new("PRESIDENT")
+    SUB_PRESIDENT = new("SUB_PRESIDENT")
+    CHIEF         = new("CHIEF")
+    STAFF         = new("STAFF")
   end
 
   # 局
   class Department
     private_class_method :new
-    attr_reader :tex_prefix
+    attr_reader :tex_prefix, :inspect
 
     def self.from(department)
       case department.to_s
-      when /exec|sikkou|執行部/i       then EXEC
+      when /exec|sh?ikkou|執行部/i     then EXEC
       when /kaikei|会計局?/i           then KAIKEI
       when /kensui|研究推進局?/i       then KENSUI
       when /syogai|渉外局?/            then SYOGAI
@@ -78,8 +96,8 @@ module Model::Assignee
       end
     end
 
-    def initialize(tex_prefix: , allowed_posts: )
-      @tex_prefix = tex_prefix.freeze
+    def initialize(inspect: , allowed_posts: )
+      @inspect = inspect
       @allowed_posts = allowed_posts.freeze
     end
 
@@ -90,12 +108,12 @@ module Model::Assignee
     EXECTIVE_POSTS = [Post::PRESIDENT, Post::SUB_PRESIDENT].freeze
     NORMAL_POSTS   = [Post::CHIEF, Post::STAFF].freeze
 
-    EXEC   = new(tex_prefix: "",       allowed_posts: EXECTIVE_POSTS)
-    KAIKEI = new(tex_prefix: "kaikei", allowed_posts: NORMAL_POSTS)
-    KENSUI = new(tex_prefix: "kensui", allowed_posts: NORMAL_POSTS)
-    SYOGAI = new(tex_prefix: "syogai", allowed_posts: NORMAL_POSTS)
-    SYSTEM = new(tex_prefix: "system", allowed_posts: NORMAL_POSTS)
-    SOUMU  = new(tex_prefix: "soumu",  allowed_posts: NORMAL_POSTS)
+    EXEC   = new(inspect: "EXEC",   allowed_posts: EXECTIVE_POSTS)
+    KAIKEI = new(inspect: "KAIKEI", allowed_posts: NORMAL_POSTS)
+    KENSUI = new(inspect: "KENSUI", allowed_posts: NORMAL_POSTS)
+    SYOGAI = new(inspect: "SYOGAI", allowed_posts: NORMAL_POSTS)
+    SYSTEM = new(inspect: "SYSTEM", allowed_posts: NORMAL_POSTS)
+    SOUMU  = new(inspect: "SOUMU" , allowed_posts: NORMAL_POSTS)
   end
 
   # 局と役職
@@ -114,6 +132,26 @@ module Model::Assignee
 
   # 名前
   class Name
+    # OK例1:
+    #   family_name: 西園寺
+    #   first_name: 公望
+    # OK例2:
+    #   name: 西園寺 公望
+    # NG例1:
+    #   name: 西園寺
+    def self.from_hash(hash)
+      family_name, first_name = case
+        when hash['family_name'] && hash['first_name']
+          hash.values_at('family_name', 'first_name')
+        when (name = hash['name'].split(/\s|　/)).length == 2
+          name
+        else
+          throw ArgumentError, "名前のフォーマットが間違っています: #{hash}"
+        end
+
+      self.new(family_name, first_name)
+    end
+
     def initialize(family_name, first_name)
       @family_name = family_name
       @first_name  = first_name
