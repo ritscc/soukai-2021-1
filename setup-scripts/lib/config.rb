@@ -17,30 +17,26 @@ class ProjectConfig
     case version = hash['version']
     when "2.0.0"
       config = hash['project']
-      date, times = config.fetch_values('date', 'times')
+      date,  _ = config.fetch_values('date')
+      times, _ = config.values_at('times')
 
       self.new(date, times)
     else
-      throw ArgumentError, "未対応のバージョンです: #{version}"
+      raise ArgumentError, "未対応のバージョンです: #{version}"
     end
   end
 
   # @param date [String, Time, Date] 日付
   # @param times [Integer, NilClass] 第何回目かを表す数値
   def initialize(date, times)
-    date_obj = case date.class
+    @date = MeetingDate.new case date.class
       when String then Date.parse date
       when Time   then date.to_date
       when Date   then date
-      else Date.parse date.to_s
+      else             Date.parse date.to_s
       end
-    @date = MeetingDate.new(date_obj)
-    @times = times || case
-    when @date.is_first_semester?  then 1
-    when @date.is_second_semester? then 2
-    else
-      throw RuntimeError, ""
-    end
+
+  @times = times&.to_i || @date.semester_number
   end
 end
 
@@ -62,7 +58,7 @@ class BitbucketConfig
       when password_credential = config['password_credential']
         PasswordCredential.new(password_credential['username', 'password'])
       else
-        # throw ArgumentError, "認証情報が不足しています。"
+        # raise ArgumentError, "認証情報が不足しています。"
       end
 
     self.new(repository, credential)
@@ -106,7 +102,7 @@ class AssigneesConfig
 
       self.new(Assignees.new(assignees))
     else
-      throw ArgumentError, "未対応のバージョンです: #{version}"
+      raise ArgumentError, "未対応のバージョンです: #{version}"
     end
   end
 
@@ -129,14 +125,14 @@ class DocumentsConfig
       documents_ary = hash['documents'].each do |doc|
         path, title, assignee = doc.fetch_values('path', 'title', 'assignee')
 
-        next Document.new(path, title, assignee)
+        next Document.new(DocumentPath.new(path), title, assignee)
       end
 
       documents = Documents.new(documents_ary)
 
       self.new(documents)
     else
-      throw ArgumentError, "未対応のバージョンです: #{version}"
+      raise ArgumentError, "未対応のバージョンです: #{version}"
     end
   end
 

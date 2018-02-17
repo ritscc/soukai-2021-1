@@ -17,7 +17,7 @@ module TexDecorator
       case @orig
       when Post
       else
-        throw RuntimeError, "未知の役職です"
+        raise RuntimeError, "未知の役職です"
       end
     end
   end
@@ -40,7 +40,7 @@ module TexDecorator
       when Post::SOUMU
         "soumu"
       else
-        throw RuntimeError, "未知の役職です"
+        raise RuntimeError, "未知の役職です"
       end
     end
   end

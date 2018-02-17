@@ -21,7 +21,7 @@ module Bitbucket
     class ClientService
       def initialize(api_version, credential, open_timeout = 60, read_timeout = 60)
         unless APIVersion::is_valid_version?(api_version)
-          throw ArgumentError, "#{api_version}は不正なAPIバージョンです。指定できるのは、#{APIVersion::VALID_API_VERSIONS.join(", ")}のいずれかです。"
+          raise ArgumentError, "#{api_version}は不正なAPIバージョンです。指定できるのは、#{APIVersion::VALID_API_VERSIONS.join(", ")}のいずれかです。"
         end
 
         @api_version = api_version
@@ -45,7 +45,7 @@ module Bitbucket
           when :PATCH
             Net::HTTP::Patch.new(path)
           else
-            throw ArgumentError, "#{self.method}は、許可されていないHTTPメソッドです。"
+            raise ArgumentError, "#{self.method}は、許可されていないHTTPメソッドです。"
           end
 
         http_request["Content-Type"] = 'application/json'
@@ -55,7 +55,7 @@ module Bitbucket
         if [:username, :password].all? {|m| @credential.methods.include?(m) }
           http_request.basic_auth(@credential.username, @credential.password)
         else
-          throw TypeError, "認証情報に期待するメソッドが存在しません。"
+          raise TypeError, "認証情報に期待するメソッドが存在しません。"
         end
 
         http_response = http_client.request(http_request)
@@ -92,22 +92,22 @@ module Bitbucket
     # 一般リクエスト
     class GenericRequest
       def method
-        throw NotImplementedError
+        raise NotImplementedError
       end
 
       def path
-        throw NotImplementedError
+        raise NotImplementedError
       end
 
       def body
-        throw NotImplementedError
+        raise NotImplementedError
       end
     end
 
     # 一般レスポンス
     class GenericResponse
       def self.parse(response)
-        throw NotImplementedError
+        raise NotImplementedError
       end
     end
 

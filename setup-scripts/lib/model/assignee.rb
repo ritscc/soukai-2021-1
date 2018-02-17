@@ -14,7 +14,7 @@ module Model::Assignee
         elsif assignees.is_a? Enumerable
           assignees.map{|assignee| [ assignee.name.format, assignee] }.to_h
         else
-          throw TypeError.new("Enumerableではありません")
+          raise TypeError.new("Enumerableではありません")
         end
     end
 
@@ -44,8 +44,8 @@ module Model::Assignee
   class Grade
     # grade should be a integer
     def initialize(grade)
-      throw ArgumentError, "学年は、Integerでなければなりません。"  unless grade.is_a? Integer
-      throw ArgumentError, "学年は、1〜4の間でなければなりません。" unless (1..4).include? grade
+      raise ArgumentError, "学年は、Integerでなければなりません。"  unless grade.is_a? Integer
+      raise ArgumentError, "学年は、1〜4の間でなければなりません。" unless (1..4).include? grade
       @grade = grade
     end
 
@@ -65,7 +65,7 @@ module Model::Assignee
       when /sub_?president|副執行委員長/i then SUB_PRESIDENT
       when /chief|局長/i                  then CHIEF
       when /staff|局員/i                  then STAFF
-      else throw ArgumentError, "そのような役職は、存在しません: #{post}"
+      else raise ArgumentError, "そのような役職は、存在しません: #{post}"
       end
     end
 
@@ -92,7 +92,7 @@ module Model::Assignee
       when /syogai|渉外局?/            then SYOGAI
       when /system|システム(管理局?)?/ then SYSTEM
       when /soumu|総務局?/             then SOUMU
-      else throw ArgumentError, "そのような局は存在しません: #{department.to_s}"
+      else raise ArgumentError, "そのような局は存在しません: #{department.to_s}"
       end
     end
 
@@ -120,7 +120,7 @@ module Model::Assignee
   class Position
     def initialize(department, post)
       unless department.has_post?(post)
-        throw ArgumentError, "局「#{department}」に対して、役職「#{post}」は定義されていません。"
+        raise ArgumentError, "局「#{department}」に対して、役職「#{post}」は定義されていません。"
       end
 
       @department = department
@@ -146,7 +146,7 @@ module Model::Assignee
         when (name = hash['name'].split(/\s|　/)).length == 2
           name
         else
-          throw ArgumentError, "名前のフォーマットが間違っています: #{hash}"
+          raise ArgumentError, "名前のフォーマットが間違っています: #{hash}"
         end
 
       self.new(family_name, first_name)

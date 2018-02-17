@@ -54,8 +54,8 @@ module Model::GeneralMeeting
     # @param date [Date] 日付
     def era_year_of(date)
       date = date.to_date
-      throw ArgumentError, "与えられた日付が、元号の開始日より前です。"   if date < @start_date
-      throw ArgumentError, "与えられた日付が、元号の終了日より後ろです。" if @end_date and date > @end_date
+      raise ArgumentError, "与えられた日付が、元号の開始日より前です。"   if date < @start_date
+      raise ArgumentError, "与えられた日付が、元号の終了日より後ろです。" if @end_date and date > @end_date
 
       date.to_date.year - self.start_date.year + 1
     end
@@ -73,7 +73,7 @@ module Model::GeneralMeeting
     def self.format_year(date)
       era = self.from(date)
 
-      throw ArgumentError, "日付に対応する元号はありません。コードの修正が必要かもしれません。" if era.nil?
+      raise ArgumentError, "日付に対応する元号はありません。コードの修正が必要かもしれません。" if era.nil?
 
       era.format_year(date)
     end
@@ -125,13 +125,15 @@ module Model::GeneralMeeting
     end
 
     def semester
+      %w{前期 後期}[semester_number - 1]
+    end
+
+    def semester_number
       case
-      when is_first_semester?
-        "前期"
-      when is_second_semester?
-        "後期"
+      when is_first_semester?  then 1
+      when is_second_semester? then 2
       else
-        throw RuntimeError, "実装に問題があります: 学期の算出処理が正しくありません"
+        raise RuntimeError, "実装に問題があります: 学期の算出処理が正しくありません"
       end
     end
   end
