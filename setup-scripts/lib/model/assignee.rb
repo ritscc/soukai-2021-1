@@ -5,7 +5,7 @@ require_relative 'model'
 module Model::Assignee
   # 担当者を管理する
   class Assignees
-    extend Enumerable
+    include Enumerable
 
     def initialize(assignees)
       @assignees =

@@ -11,7 +11,7 @@ module TexDecorator
   end
 
   class PostDecorator
-    extend Decorator
+    include Decorator
 
     def to_tex
       case @orig
@@ -23,7 +23,7 @@ module TexDecorator
   end
 
   class DepartmentDecorator
-    extend Decorator
+    include Decorator
 
     def tex_prefix
       case @orig
@@ -46,7 +46,7 @@ module TexDecorator
   end
 
   class PositionDecorator
-    extend Decorator
+    include Decorator
 
     def department
       DepartmentDecorator.new(super)
@@ -62,7 +62,7 @@ module TexDecorator
   end
 
   class GradeDecorator
-    extend Decorator
+    include Decorator
 
     # 回生をTeXコマンドの表現に変換する
     def to_tex
@@ -71,7 +71,7 @@ module TexDecorator
   end
 
   class AssigneeDecorator
-    extend Decorator
+    include Decorator
 
     def grade
       GradeDecorator.new(super)

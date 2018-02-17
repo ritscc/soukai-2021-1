@@ -1,6 +1,7 @@
 version: 2.0.0
 project:
     date: 2017-08-20
+    times: 1
 bitbucket:
     username: ritscc
     repo_slug: soukai-2017-01

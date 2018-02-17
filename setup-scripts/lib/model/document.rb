@@ -62,7 +62,7 @@ module Model::Document
   end
 
   class Documents
-    extend Enumerable
+    include Enumerable
 
     def initialize(documents)
       @documents = 

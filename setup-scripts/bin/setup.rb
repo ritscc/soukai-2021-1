@@ -5,6 +5,9 @@ require_relative '../lib/service/initialize_service.rb'
 require_relative '../lib/service/tex_service.rb'
 require_relative '../lib/config.rb'
 require_relative '../lib/version.rb'
+require_relative '../lib/ruby_version.rb'
+
+SUPPORTED_VERSION = "2.5.0"
 
 def read_value(io, msg, default = nil)
   prompt = default ? "#{msg}(デフォルト: #{default}): " : "#{msg}: "
@@ -17,7 +20,7 @@ end
 
 def load_config
   File.open("./assignee.yml", "r") do |io|
-    Config.from_io(io)
+    Config.from(io, ENV)
   end
 end
 
@@ -57,6 +60,12 @@ def main
     $stderr.puts "no such subcommand: #{arg}"
     exit 1
   end
+end
+
+
+unless RubyVersion.new(RUBY_VERSION) >= RubyVersion.new(SUPPORTED_VERSION)
+  STDERR.puts "サポートされていないRubyのバージョンです: #{RUBY_VERSION} < #{SUPPORTED_VERSION}"
+  exit 1
 end
 
 main
