@@ -36,25 +36,26 @@ end
 # 一般的な設定
 class ProjectConfig
   include ::Model::GeneralMeeting
-  attr_reader :times, :date
+  attr_reader :ordinal, :date
 
   # ハッシュから設定を生成する
   def self.from_hash(hash)
     case version = ConfigVersion.new(hash['version'])
     when ConfigVersion::V2_0_0
       config = hash['project']
-      date,  _ = config.fetch_values('date')
-      times, _ = config.values_at('times')
 
-      self.new(date, times)
+      date, _    = config.fetch_values('date')
+      ordinal, _ = config.values_at('ordinal')
+
+      self.new(date, ordinal)
     else
       raise ArgumentError, "未対応の設定のバージョンです: #{version}"
     end
   end
 
   # @param date [String, Time, Date] 日付
-  # @param times [Integer, NilClass] 第何回目かを表す数値
-  def initialize(date, times)
+  # @param ordinal [Integer, NilClass] 第何回目かを表す数値
+  def initialize(date, ordinal)
     @date = MeetingDate.new case date.class
       when String then Date.parse date
       when Time   then date.to_date
@@ -62,7 +63,7 @@ class ProjectConfig
       else             Date.parse date.to_s
       end
 
-    @times = times&.to_i || @date.semester_number
+    @ordinal = ordinal&.yield_self{|x| Ordinal.new(x.to_i)} || Ordinal.estimate(@date)
   end
 end
 

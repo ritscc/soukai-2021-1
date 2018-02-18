@@ -137,4 +137,55 @@ module Model::GeneralMeeting
       end
     end
   end
+
+  class Ordinal
+    KANJI_DIGITS        = %w{零 一 二 三 四 五 六 七 八 九}.freeze
+    KANJI_SUFFIXES      = %w{十 百 千}.freeze
+    KANJI_META_SUFFIXES = %w{万 億 兆 京}.freeze
+
+    RANGE = 1...(10000 ** KANJI_META_SUFFIXES.length)
+
+    def self.estimate(date)
+      new(date.semester_number)
+    end
+
+    def initialize(value)
+      raise ArgumentError, "範囲外の値です: #{value}" unless RANGE.include?(value&.to_i)
+
+      @value = value.to_i
+    end
+
+    def to_i 
+      @value
+    end
+
+    def kanji
+
+      def digits
+        @value.to_s(10).chars.map(&:to_i)
+      end
+
+      # 桁の配列を逆順で受け取り、漢字の配列を返す
+      def four_digits_conv(digits)
+        digits.each_with_index.flat_map {|digit_index, suffix_index|
+
+          digit  = KANJI_DIGITS[digit_index]
+          suffix = suffix_index.zero? ? "" : KANJI_SUFFIXES[suffix_index - 1]
+
+          case
+          when digit_index == 0                      then []
+          when suffix_index >= 1 && digit_index == 1 then [suffix]
+          else                                            [suffix, digit]
+          end
+        }.to_a
+      end
+
+      digits.reverse.each_slice(4).each_with_index.flat_map {|digits, meta_index|
+        four_digits = four_digits_conv(digits)
+        meta = meta_index.zero? ? "" : KANJI_META_SUFFIXES[meta_index - 1]
+
+        four_digits.empty? ? "" : [ meta, four_digits ].join
+      }.join.reverse
+    end
+  end
 end

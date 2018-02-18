@@ -32,7 +32,7 @@ def init
   puts "開催日: #{date.to_s}（#{date.format_japanese_date}）"
   puts "年度: #{date.fiscal_year}年度（#{date.fiscal_japanese_year}度）"
   puts "学期: #{date.semester}"
-  puts "回目: #{config.project_config.times}"
+  puts "回目: 第#{config.project_config.ordinal.kanji}回"
   puts "リポジトリ名: #{config.bitbucket_config.repository.repo_slug}"
 
   puts "\n上記の設定で、初期化を行います。"
