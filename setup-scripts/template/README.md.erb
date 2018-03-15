@@ -1,13 +1,13 @@
-<%= "#{info[:fiscal_year]}" %>年度第<%= "#{info[:ordinal_kanji]}" %>回総会議案書
+<%= "#{@japanese_year}" %>年度第<%= "#{@ordinal_kanji}" %>回総会議案書
 ========================
-これは，<%= "#{info[:fiscal_year]}" %>年度第<%= "#{info[:ordinal_kanji]}" %>回総会議案書リポジトリです．
+これは，<%= "#{@fiscal_year}" %>年度第<%= "#{@ordinal_kanji}" %>回総会議案書リポジトリです．
 
 ビルドステータス
 -----------------------
 Werckerを用いて，総会文書のビルドを自動化しています．
 生成されたPDFは，[Slackの総会チャンネル](https://ritscc.slack.com/messages/soukai/)にアップロードされます．
 
- <%= "#{info[:wercker_badge]}" %>
+ <%= "#{@wercker_badge}" %>
 
 文章表現について
 -----------------------

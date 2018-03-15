@@ -9,9 +9,9 @@ require_relative '../lib/ruby_version.rb'
 
 SUPPORTED_VERSION = "2.5.0"
 
-def read_value(io, msg, default = nil)
-  prompt = default ? "#{msg}(デフォルト: #{default}): " : "#{msg}: "
-  line = io.readline(prompt).chomp
+def read_value(read, write, msg, default = nil)
+  write.print default ? "#{msg}(デフォルト: #{default}): " : "#{msg}: "
+  line = read.readline.chomp
 
   if not line.empty?
     then line
@@ -35,8 +35,12 @@ def init
   puts "回目: 第#{config.project_config.ordinal.kanji}回"
   puts "リポジトリ名: #{config.bitbucket_config.repository.repo_slug}"
 
-  puts "\n上記の設定で、初期化を行います。"
+  puts "\n上記の設定で初期化を行います。"
+  value = read_value(STDIN, STDOUT, "よろしいですか？ (Y/n)", "n")
+  exit 0 unless value =~ /^Y$/i
 
+  service = InitializeService.new(config)
+  service.initialize_project
 end
 
 # 設定ファイルを元に、TeXファイルを生成する
