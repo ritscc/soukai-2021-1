@@ -11,6 +11,10 @@ module Model::Repository
     def initialize(username)
       @username = username
     end
+
+    def ==(other)
+      username == other.username
+    end
   end
 
   # リポジトリ

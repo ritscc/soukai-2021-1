@@ -3,6 +3,9 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem "rake"
-gem "yard"
-gem "rspec", "~> 3.0"
+group :development do
+  gem 'rake'
+  gem 'yard'
+  gem 'rspec', '~> 3.0'
+  gem 'rspec-power_assert', '~> 1.1'
+end

@@ -90,7 +90,7 @@ class BitbucketConfig
         when password_credential = config['password_credential']
           PasswordCredential.new(*password_credential.fetch_values('username', 'password'))
         else
-          # raise ArgumentError, "認証情報が不足しています。"
+          raise ArgumentError, "認証情報が不足しています。"
         end
 
       self.new(repository, credential)
@@ -112,7 +112,7 @@ class AssigneesConfig
   include ::Model::Assignee
   include ::Model::Repository
 
-  attr_reader
+  attr_reader :assignees
 
   # ハッシュから設定を生成する
   def self.from_hash(hash)
@@ -148,6 +148,7 @@ class AssigneesConfig
   def initialize(assignees)
     @assignees = assignees
   end
+
 end
 
 # 文書と担当者の設定

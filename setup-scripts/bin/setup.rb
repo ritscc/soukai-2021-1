@@ -37,7 +37,7 @@ def init
 
   puts "\n上記の設定で初期化を行います。"
   value = read_value(STDIN, STDOUT, "よろしいですか？ (Y/n)", "n")
-  exit 0 unless value =~ /^Y$/i
+  exit 0 unless value.match?(/^Y$/i)
 
   service = InitializeService.new(config)
   service.initialize_project
@@ -67,7 +67,7 @@ def main
 end
 
 
-unless RubyVersion.new(RUBY_VERSION) >= RubyVersion.new(SUPPORTED_VERSION)
+unless RubyVersion.current >= RubyVersion.new(SUPPORTED_VERSION)
   STDERR.puts "サポートされていないRubyのバージョンです: #{RUBY_VERSION} < #{SUPPORTED_VERSION}"
   exit 1
 end

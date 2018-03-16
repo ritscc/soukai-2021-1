@@ -65,7 +65,7 @@ module Model::Document
     include Enumerable
 
     def initialize(documents)
-      @documents = 
+      @documents =
         if documents.is_a? Array
           documents.clone
         elsif assignees.is_a? Enumerable

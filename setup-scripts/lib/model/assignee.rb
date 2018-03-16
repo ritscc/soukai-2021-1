@@ -38,6 +38,10 @@ module Model::Assignee
       @position = position
       @bitbucket_user = bitbucket_user
     end
+
+    def ==(other)
+      id == other.id
+    end
   end
 
   # 学年
@@ -51,6 +55,10 @@ module Model::Assignee
 
     def to_i
       @grade.to_i
+    end
+
+    def ==(other)
+      to_i == other.to_i
     end
   end
 
@@ -127,6 +135,10 @@ module Model::Assignee
       @post = post
     end
 
+    def ==(other)
+      department == other.department && post == other.post
+    end
+
     attr_reader :department, :post
   end
 
@@ -155,6 +167,10 @@ module Model::Assignee
     def initialize(family_name, first_name)
       @family_name = family_name
       @first_name  = first_name
+    end
+
+    def ==(other)
+      family_name == other.family_name && first_name == other.first_name
     end
 
     attr_reader :family_name, :first_name

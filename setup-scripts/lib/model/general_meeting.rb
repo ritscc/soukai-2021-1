@@ -93,9 +93,16 @@ module Model::GeneralMeeting
 
   # 総会開催日
   class MeetingDate
+    attr_reader :date
+    protected :date
+
     # @param 
     def initialize(date)
       @date = date.to_date
+    end
+
+    def ==(other)
+      self.date == other.date
     end
 
     def to_s
@@ -145,6 +152,9 @@ module Model::GeneralMeeting
 
     RANGE = 1...(10000 ** KANJI_META_SUFFIXES.length)
 
+    attr_reader :value
+    protected :value
+
     def self.estimate(date)
       new(date.semester_number)
     end
@@ -157,6 +167,10 @@ module Model::GeneralMeeting
 
     def to_i 
       @value
+    end
+
+    def ==(other)
+      self.value == other.value
     end
 
     def kanji

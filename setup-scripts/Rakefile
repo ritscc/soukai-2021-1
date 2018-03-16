@@ -8,4 +8,6 @@ YARD::Rake::YardocTask.new do |task|
   task.options = []
 end
 
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.rspec_opts = "-r rspec-power_assert"
+end
