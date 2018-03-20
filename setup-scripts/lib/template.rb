@@ -27,11 +27,11 @@ module Template
   class DocumentTemplate < GenericTemplate
     PATH = TEMPLATE_BASE_PATH + '/document.tex.erb'
 
-    attr_writer :date
-
     def initialize(template_path = PATH)
       super(template_path)
     end
+
+    attr_writer :date
   end
 
   # 担当者の割り当てが出来る文書のテンプレート

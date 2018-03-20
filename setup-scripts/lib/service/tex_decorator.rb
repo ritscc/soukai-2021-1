@@ -2,6 +2,7 @@
 require_relative '../model/assignee.rb'
 
 module TexDecorator
+  include ::Model::Assignee
 
   refine Post do
     def to_tex

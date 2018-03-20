@@ -4,6 +4,7 @@ require 'date'
 require_relative 'model'
 
 module Model::GeneralMeeting
+
   # 総会
   class GeneralMeeting
     attr_reader :date, :times
@@ -18,7 +19,12 @@ module Model::GeneralMeeting
 
   # 和暦
   class JapaneseEra
-    attr_reader :start_date, :end_date, :kanji
+    # 与えられた日付の年に対応する元号を返す
+    #
+    # @param date [Date] 日付
+    def self.from(date)
+      ERAS.find {|era| era.include?(date.to_date) }
+    end
 
     def initialize(start_date: , end_date: , kanji: )
       @start_date = start_date
@@ -36,23 +42,10 @@ module Model::GeneralMeeting
       (start_date .. end_date).include? date.to_date
     end
 
-    # 与えられた日付の年を、自身の元号における和暦の文字列に変換する
-    #
-    # @param date [Date] 日付
-    def format_year(date)
-      year = self.era_year_of(date)
-      year = if year.equal? 1
-        then '元年'
-        else "#{year}年"
-        end
-
-      "#{self.kanji}#{year}"
-    end
-
     # 与えられた日付の年を、自身の元号における年に変換する
     #
     # @param date [Date] 日付
-    def era_year_of(date)
+    def year_of(date)
       date = date.to_date
       raise ArgumentError, "与えられた日付が、元号の開始日より前です。"   if date < @start_date
       raise ArgumentError, "与えられた日付が、元号の終了日より後ろです。" if @end_date and date > @end_date
@@ -60,28 +53,7 @@ module Model::GeneralMeeting
       date.to_date.year - self.start_date.year + 1
     end
 
-    # 与えられた日付の年に対応する元号を返す
-    #
-    # @param date [Date] 日付
-    def self.from(date)
-      ERAS.find {|era| era.include?(date.to_date) }
-    end
-
-    # 与えられた日付の年を、和暦の文字列に変換する
-    #
-    # @param date [Date] 日付
-    def self.format_year(date)
-      era = self.from(date)
-
-      raise ArgumentError, "日付に対応する元号はありません。コードの修正が必要かもしれません。" if era.nil?
-
-      era.format_year(date)
-    end
-
-    def self.format_date(date)
-      "#{self.format_year(date)}" + date.strftime("%m月%d日")
-    end
-
+    attr_reader :kanji, :start_date, :end_date
     private_class_method :new
 
     SHOWA  = new start_date: Date.new(1926, 12, 25), end_date: Date.new(1989, 1,  7), kanji: '昭和'
@@ -91,50 +63,121 @@ module Model::GeneralMeeting
     ERAS = [ SHOWA, HEISEI, NEW ]
   end
 
-  # 総会開催日
-  class MeetingDate
-    attr_reader :date
-    protected :date
+  # 和暦における日付
+  class JapaneseDate
 
-    # @param 
     def initialize(date)
-      @date = date.to_date
-    end
-
-    def ==(other)
-      self.date == other.date
+      @date = date
+      @era  = JapaneseEra.from(date)
     end
 
     def to_s
-      @date.strftime("%Y-%m-%d %a")
+      format
     end
 
-    def format_japanese_date
-      JapaneseEra.format_date(@date)
+    def to_date
+      @date
     end
 
-    def fiscal_year
-      @date.year - (@date.month < 4 ? 1 : 0)
+    def year_japanese
+      @era.year_of(@date)
     end
 
-    def fiscal_japanese_year
-      JapaneseEra.format_year(@date)
+    def year
+      @date.year
     end
 
-    # 前期
+    def month
+      @date.month
+    end
+
+    def day
+      @date.day
+    end
+
+    def era
+      @era
+    end
+
+    # 与えられた日付の年を、自身の元号における和暦の文字列に変換する
+    #
+    # @param date [Date] 日付
+    def format_year_japanese
+      year_str = if self.year_japanese == 1
+        then "元年"
+        else "#{year_japanese}年"
+        end
+
+      "#{@era.kanji}#{year_str}"
+    end
+
+    # 与えられた日付を、和暦における日付に変換する
+    #
+    # @param date [Date] 日付
+    def format
+      "#{self.format_year}#{self.to_date.strftime("%m月%d日")}"
+    end
+
+    def prev_year
+      self.class.new(self.to_date.prev_year)
+    end
+  end
+
+  # 総会開催日
+  class MeetingDate
+
+    # @param
+    def initialize(date)
+      @date = case date
+              when JapaneseDate then date
+              when Date         then JapaneseDate.new(date)
+              else JapaneseDate.new(Date.parse(date))
+              end
+    end
+
+    def ==(other)
+      self.to_date == other.to_date
+    end
+
+    def to_s
+      @date.to_date.strftime("%Y-%m-%d %a")
+    end
+
+    def to_date
+      @date.to_date
+    end
+
+    def format_japanese_era
+      @date.format
+    end
+
+    # 年度を返す
+    def fiscal_year(month = 4)
+      @date.year - (@date.month < month ? 1 : 0)
+    end
+
+    # 年度を和暦で返す
+    def fiscal_year_japanese(month = 4)
+      date = @date.month < month ? @date.prev_year : @date
+      date.format_year_japanese
+    end
+
+    # 前期かどうかを返す
     def is_first_semester?
       (4..9).include? @date.month
     end
 
-    # 後期
+    # 後期かどうかを返す
     def is_second_semester?
       not self.is_first_semester?
     end
 
+    # セメスターの文字列を返す
     def semester
       %w{前期 後期}[semester_number - 1]
     end
 
+    # セメスターの数値
     def semester_number
       case
       when is_first_semester?  then 1
@@ -165,7 +208,7 @@ module Model::GeneralMeeting
       @value = value.to_i
     end
 
-    def to_i 
+    def to_i
       @value
     end
 
@@ -202,4 +245,5 @@ module Model::GeneralMeeting
       }.join.reverse
     end
   end
+
 end

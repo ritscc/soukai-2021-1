@@ -2,6 +2,24 @@ require 'rspec'
 require_relative '../lib/model/general_meeting'
 
 module Model::GeneralMeeting
+RSpec.describe MeetingDate do
+  describe "#fiscal_year" do
+    it "は、年度を西暦で返す" do
+      is_asserted_by { MeetingDate.new(Date.new(1989, 1, 7)).fiscal_year(4) == 1988 }
+      is_asserted_by { MeetingDate.new(Date.new(1989, 1, 8)).fiscal_year(4) == 1988 }
+      is_asserted_by { MeetingDate.new(Date.new(1989, 4, 8)).fiscal_year(4) == 1989 }
+    end
+  end
+
+  describe "#fiscal_year_japanese" do
+    it "は、年度を和暦で返す" do
+      is_asserted_by { MeetingDate.new(Date.new(1989, 1, 7)).fiscal_year_japanese(4) == "昭和63年" }
+      is_asserted_by { MeetingDate.new(Date.new(1989, 1, 8)).fiscal_year_japanese(4) == "昭和63年" }
+      is_asserted_by { MeetingDate.new(Date.new(1989, 4, 8)).fiscal_year_japanese(4) == "平成元年" }
+    end
+  end
+end
+
 RSpec.describe JapaneseEra do
   describe ".from" do
     it "は、年号オブジェクトを返す" do
@@ -14,24 +32,16 @@ RSpec.describe JapaneseEra do
     end
   end
 
-  describe ".format_year" do
-    it "は、年号を表す文字列を返す" do
-      expect(JapaneseEra.format_year(Date.new(1989, 1, 7))).to eq('昭和64年')
-      expect(JapaneseEra.format_year(Date.new(1989, 1, 8))).to eq('平成元年')
-      expect(JapaneseEra.format_year(Date.new(2017, 8, 8))).to eq('平成29年')
-    end
-  end
-
-  describe ".era_year_of" do
+  describe ".year_of" do
     it "は、ある年号における年をIntegerで返す" do
-      expect(JapaneseEra::SHOWA.era_year_of(Date.new(1989, 1, 7))).to eq(64)
-      expect(JapaneseEra::HEISEI.era_year_of(Date.new(1989, 1, 8))).to eq(1)
-      expect(JapaneseEra::HEISEI.era_year_of(Date.new(2017, 8, 8))).to eq(29)
+      expect(JapaneseEra::SHOWA.year_of(Date.new(1989, 1, 7))).to eq(64)
+      expect(JapaneseEra::HEISEI.year_of(Date.new(1989, 1, 8))).to eq(1)
+      expect(JapaneseEra::HEISEI.year_of(Date.new(2017, 8, 8))).to eq(29)
     end
 
     it "は、不正な年号を受け取ると、例外を投げる" do
-      expect { JapaneseEra::SHOWA.era_year_of(Date.new(1989, 1, 8))  }.to raise_error(ArgumentError)
-      expect { JapaneseEra::HEISEI.era_year_of(Date.new(1989, 1, 7)) }.to raise_error(ArgumentError)
+      expect { JapaneseEra::SHOWA.year_of(Date.new(1989, 1, 8))  }.to raise_error(ArgumentError)
+      expect { JapaneseEra::HEISEI.year_of(Date.new(1989, 1, 7)) }.to raise_error(ArgumentError)
     end
   end
 end
