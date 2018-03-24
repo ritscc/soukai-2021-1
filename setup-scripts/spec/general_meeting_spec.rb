@@ -18,6 +18,20 @@ RSpec.describe MeetingDate do
       is_asserted_by { MeetingDate.new(Date.new(1989, 4, 8)).fiscal_year_japanese(4) == "平成元年" }
     end
   end
+
+  describe "#format_japanese" do
+    it "は、和暦で日付の文字列表現を返す" do
+      is_asserted_by { MeetingDate.new(Date.new(1989, 1, 7)).format_japanese == "昭和64年01月07日" }
+      is_asserted_by { MeetingDate.new(Date.new(1989, 4, 8)).format_japanese == "平成元年04月08日" }
+    end
+  end
+
+  describe "#to_s" do
+    it "は、日付の文字列表現を返す" do
+      is_asserted_by { MeetingDate.new(Date.new(1989, 1, 7)).to_s == "1989年01月07日" }
+      is_asserted_by { MeetingDate.new(Date.new(1989, 4, 8)).to_s == "1989年04月08日" }
+    end
+  end
 end
 
 RSpec.describe JapaneseEra do
@@ -32,7 +46,7 @@ RSpec.describe JapaneseEra do
     end
   end
 
-  describe ".year_of" do
+  describe ".era_year_of" do
     it "は、ある年号における年をIntegerで返す" do
       expect(JapaneseEra::SHOWA.year_of(Date.new(1989, 1, 7))).to eq(64)
       expect(JapaneseEra::HEISEI.year_of(Date.new(1989, 1, 8))).to eq(1)

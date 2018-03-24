@@ -115,7 +115,7 @@ module Model::GeneralMeeting
     #
     # @param date [Date] 日付
     def format
-      "#{self.format_year}#{self.to_date.strftime("%m月%d日")}"
+      "#{self.format_year_japanese}#{self.to_date.strftime("%m月%d日")}"
     end
 
     def prev_year
@@ -140,14 +140,14 @@ module Model::GeneralMeeting
     end
 
     def to_s
-      @date.to_date.strftime("%Y-%m-%d %a")
+      @date.to_date.strftime("%Y年%m月%d日")
     end
 
     def to_date
       @date.to_date
     end
 
-    def format_japanese_era
+    def format_japanese
       @date.format
     end
 

@@ -4,21 +4,20 @@ require 'net/https'
 require 'json'
 
 module Bitbucket
-  module Client
+  class Client
     module APIVersion
       V2_0 = '2.0'
 
       VALID_API_VERSIONS = [V2_0]
 
       def is_valid_version?(version)
-        VALID_API_VERSIONS.include? version
+        VALID_API_VERSIONS.any? {|e| e.equal? version }
       end
 
       module_function :is_valid_version?
     end
 
-    # クライアント
-    class ClientService
+    class Requester
       def initialize(api_version, credential, open_timeout = 60, read_timeout = 60)
         unless APIVersion::is_valid_version?(api_version)
           raise ArgumentError, "#{api_version}は不正なAPIバージョンです。指定できるのは、#{APIVersion::VALID_API_VERSIONS.join(", ")}のいずれかです。"
@@ -153,6 +152,9 @@ module Bitbucket
 
       def initialize()
       end
+    end
+
+    def initailize()
     end
   end
 end

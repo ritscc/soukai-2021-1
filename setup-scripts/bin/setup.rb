@@ -43,8 +43,8 @@ def init(args)
 
   date = config.project_config.date
   puts strip_margin(<<-EOS)
-  開催日: #{date.to_s}（#{date.format_japanese_date}）
-  年度: #{date.fiscal_year}年度（#{date.fiscal_japanese_year}度）
+  開催日: #{date.to_s}（#{date.format_japanese}）
+  年度: #{date.fiscal_year}年度（#{date.fiscal_year_japanese}度）
   学期: #{date.semester}
   回目: 第#{config.project_config.ordinal.kanji}回
   リポジトリ名: #{config.bitbucket_config.repository.repo_slug}
