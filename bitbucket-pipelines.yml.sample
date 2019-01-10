@@ -3,13 +3,12 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: timnn/texlive
+image: bitterfox/texlive
 
 pipelines:
   default:
     - step:
         script:
-          - ci-scripts/install-package.sh curl
           - ci-scripts/init.sh
           - ci-scripts/test.sh
           - ci-scripts/build.sh
@@ -17,7 +16,6 @@ pipelines:
     master:
         - step:
             script:
-              - ci-scripts/install-package.sh curl
               - ci-scripts/init.sh
               - ci-scripts/test.sh
               - ci-scripts/build.sh
@@ -25,7 +23,6 @@ pipelines:
     develop:
         - step:
             script:
-              - ci-scripts/install-package.sh curl
               - ci-scripts/init.sh
               - ci-scripts/test.sh
               - ci-scripts/build.sh
