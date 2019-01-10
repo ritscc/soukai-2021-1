@@ -177,7 +177,6 @@ houshin:
     if match = filepath.scan(%r{^([^/]+)/([^/]+)/(.+)$})[0]
       # 正規表現による切り出し
       section = match[1]
-      section_file = File.join('./src', "#{File.dirname(filepath)}.tex")
       subsection_file = File.join('./src', filepath)
 
       if File.exist?(subsection_file)
@@ -191,14 +190,6 @@ houshin:
       # ファイルを生成し、書き込みを行う
       File.write(subsection_file, lines.join("\n") + "\n")
 
-      # section_fileにinputが書かれていなかったら、追加
-      # TODO: 自動inputにする
-      s = File.read(section_file, encoding: Encoding::UTF_8)
-      unless s =~ /#{subsection_file}/
-        File.open(section_file, 'a') do |file|
-          file.puts("\\input{#{subsection_file}}")
-        end
-      end
     elsif filepath =~ %r{/[1234]kai.tex$} || filepath == 'hajimeni.tex'
       # 回生別 または はじめに の場合
       subsection_file = File.join('./src', filepath)
