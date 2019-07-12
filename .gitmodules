@@ -1,9 +1,9 @@
 [submodule "constitution"]
 	path = constitution
-	url = git@bitbucket.org:ritscc/constitution.git
+	url = git@gitlab.com:ritscc/soukai/constitution.git
 [submodule "tex-commands"]
 	path = tex-commands
-	url = git@bitbucket.org:ritscc/tex-commands
+	url = git@gitlab.com:ritscc/soukai/tex-commands.git
 [submodule "ta9boh"]
 	path = ta9boh
-	url = git@bitbucket.org:ritscc/ta9boh.git
+	url = git@gitlab.com:ritscc/soukai/ta9boh.git
