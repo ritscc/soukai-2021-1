@@ -7,3 +7,6 @@
 [submodule "ta9boh"]
 	path = ta9boh
 	url = git@gitlab.com:ritscc/soukai/ta9boh.git
+[submodule "unagi"]
+	path = unagi
+	url = git@gitlab.com:ritscc/soukai/unagi.git
