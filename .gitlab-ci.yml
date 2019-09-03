@@ -3,6 +3,7 @@ variables:
 
 stages:
   - regex
+  - make_check
 
 regex:
   stage: regex
@@ -13,3 +14,13 @@ regex:
   script:
     - apk add bash curl jq
     - unagi/ci-scripts/note_regex.sh
+
+make_check:
+  stage: make_check
+  image: "paperist/alpine-texlive-ja"
+  only:
+    refs:
+      - merge_requests
+  script:
+    - ptex2pdf -l -ot -kanji=utf8 -synctex=1 document.tex
+    - cat document.log
