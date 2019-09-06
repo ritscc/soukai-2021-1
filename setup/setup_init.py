@@ -71,21 +71,21 @@ def init():
     # READMEの生成
     readme_template = env.get_template(config.README_TEMPLATE)
     # 書き込み
-    # with open(config.README_PATH, mode='w') as readme:
-    #     readme.write(readme_template.render(info=soukaiInfo))
+    with open(config.README_PATH, mode='w') as readme:
+        readme.write(readme_template.render(info=soukaiInfo))
 
     # document.texの生成
     document_tex_template = env.get_template(config.DOCUMENT_TEX_TEMPLATE)
     #書き込み
-    # with open(config.DOCUMENT_TEX_PATH, mode='w') as document_tex:
-    #     document_tex.write(document_tex_template.render(info=soukaiInfo))
+    with open(config.DOCUMENT_TEX_PATH, mode='w') as document_tex:
+        document_tex.write(document_tex_template.render(info=soukaiInfo))
 
     # TODO : 不要ファイルの削除
 
     # 担当者のyamlテンプレートファイルを生成
     assignee_tamplate = env.get_template(config.ASSIGNEE_TEMPLATE)
     # 書き込み
-    with open('../assignee-test.yml', mode='w') as assignee:
+    with open(config.ASSIGNEE_PATH, mode='w') as assignee:
         assignee.write(assignee_tamplate.render(info=soukaiInfo))
 
 def is_correct_ordinal(ordinal: int) -> bool:
