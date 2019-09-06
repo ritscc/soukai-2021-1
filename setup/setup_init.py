@@ -1,5 +1,6 @@
 import datetime
 from datetime import datetime as dt
+import os
 from jinja2 import Environment, FileSystemLoader
 
 import setup_msg as msg
@@ -80,7 +81,9 @@ def init():
     with open(config.DOCUMENT_TEX_PATH, mode='w') as document_tex:
         document_tex.write(document_tex_template.render(info=soukaiInfo))
 
-    # TODO : 不要ファイルの削除
+    # 不要ファイルの削除
+    for file_name in config.REMOVE_FILES[soukaiInfo.ordinal]:
+        os.remove(file_name)
 
     # 担当者のyamlテンプレートファイルを生成
     assignee_tamplate = env.get_template(config.ASSIGNEE_TEMPLATE)
