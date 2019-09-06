@@ -13,7 +13,9 @@ soukatsu:
   1kai: 1回生総括,
   2kai: 2回生総括,
   3kai: 3回生総括,
+{% if info.ordinal == 1 %}
   4kai: 4回生総括,
+{% endif %}
   kaikei:
 #    1_zentai: 全体総括,
   kensui:
@@ -28,10 +30,14 @@ houshin:
   zentai:
     1_zentai: {{ '前期' if info.ordinal == 2 else '後期'}}活動方針,
     2_unei: 運営方針,
+{% if info.ordinal == 1 %}
   1kai: {{ '新' if info.ordinal == 2 else ''}}1回生方針,
+{% endif %}
   2kai: {{ '新' if info.ordinal == 2 else ''}}2回生方針,
   3kai: {{ '新' if info.ordinal == 2 else ''}}3回生方針,
+{% if info.ordinal == 2 %}
   4kai: {{ '新' if info.ordinal == 2 else ''}}4回生方針,
+{% endif %}
   kaikei:
 #    1_zentai: 全体方針,
   kensui:
