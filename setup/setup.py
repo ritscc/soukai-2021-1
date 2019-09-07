@@ -1,8 +1,9 @@
 #!/usr/bin/env python3.7
 import sys
 
-import setup_init as init
-import setup_msg as msg
+from setup import setup_init as init
+from setup import setup_create_files as create_files
+from setup import setup_msg as msg
 
 def print_help():
     help_msg: str = msg.HELP_MSG
@@ -19,7 +20,7 @@ if __name__ == "__main__":
         init.init()
     elif args[1] == 'g' or args[1] == 'generate':
         sl = args[2:]
-        print('generateです')
+        create_files.create_files(*sl)
     elif args[1] == 'i' or args[1] == 'issue':
         sl = args[2:]
         print('issueです')

@@ -1,5 +1,7 @@
 class FontColors:
+    RED: str = '\033[31m'
     GREEN: str = '\033[32m'
+    YELLOW: str = '\033[33m'
     RESET: str = '\033[0m'
 
 HELP_MSG: str = '''\
@@ -34,10 +36,31 @@ Example:
   python setup.py i soukatsu
   python setup.py g houshin kensui'''
 
+def CREATED_FILE_MSG(file_name: str) -> str:
+    msg: str = 'Created ' + file_name + ' .'
+    return msg
+
+def OVERWRITTEN_FILE_MSG(file_name: str) -> str:
+    msg: str = 'Overwritten ' + file_name + ' .'
+    return msg
+
 DELETE_LAST_LINE: str = '\033[1A\033[2K\033[1A'
 
-ERROR_INVAID_FORMAT: str = 'Invaid format. Try again.'
-ERROR_NOT_1_OR_2: str = 'Input isn\'t 1 or 2. Try again.'
+ERROR_INVAID_FORMAT: str = FontColors.RED + 'Invaid format. Try again.' + FontColors.RESET
+ERROR_NOT_1_OR_2: str = FontColors.RED + 'Input isn\'t 1 or 2. Try again.' + FontColors.RESET
+ERROR_UNSUPPORTED_FILE_PATH: str = FontColors.RED + 'Unsupported file path.' + FontColors.RESET
+
+def ERROR_FILE_EXIST(file_name: str) -> str:
+    error_msg: str = FontColors.RED + \
+        file_name + ' is exist.' + \
+        FontColors.RESET
+    return error_msg
+
+def WORNING_FILE_CHANGE(file_name: str) -> str:
+    worning_msg: str = FontColors.YELLOW + \
+        'worning: ' + file_name + ' will be changed.' + \
+        FontColors.RESET
+    return worning_msg
 
 def MEETING_DAY_INPUT_GUIDE(default_date_str: str) -> str:
     guide_msg: str = '開催日 ' + \

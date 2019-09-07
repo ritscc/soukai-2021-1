@@ -3,8 +3,8 @@ from datetime import datetime as dt
 import os
 from jinja2 import Environment, FileSystemLoader
 
-import setup_msg as msg
-import setup_config as config
+from setup import setup_msg as msg
+from setup import setup_config as config
 
 # soukai.texのための情報クラス
 class SoukaiInfo:
@@ -21,7 +21,7 @@ class SoukaiInfo:
         self.repo_name: str
 
 def init():
-    soukaiInfo: SoukaiInfo = SoukaiInfo()
+    soukai_info: SoukaiInfo = SoukaiInfo()
 
     today: datetime = datetime.date.today()
 
@@ -30,16 +30,16 @@ def init():
         try:
             input_str = input(msg.MEETING_DAY_INPUT_GUIDE(today.strftime(config.DATE_FORMAT))) \
                 or today.strftime(config.DATE_FORMAT)
-            soukaiInfo.date = dt.strptime(input_str, config.DATE_FORMAT)
+            soukai_info.date = dt.strptime(input_str, config.DATE_FORMAT)
 
             # 結果表示
             print(msg.DELETE_LAST_LINE)
             print(msg.MEETING_DAY_INPUT_GUIDE(today.strftime(config.DATE_FORMAT)) + \
-                soukaiInfo.date.strftime(config.DATE_FORMAT))
+                soukai_info.date.strftime(config.DATE_FORMAT))
 
-            soukaiInfo.fiscal_year = get_fiscal_year(soukaiInfo.date.year, soukaiInfo.date.month)
-            soukaiInfo.last_year = soukaiInfo.fiscal_year - 1
-            soukaiInfo.next_year = soukaiInfo.fiscal_year + 1
+            soukai_info.fiscal_year = get_fiscal_year(soukai_info.date.year, soukai_info.date.month)
+            soukai_info.last_year = soukai_info.fiscal_year - 1
+            soukai_info.next_year = soukai_info.fiscal_year + 1
             break
         except:
             print(msg.ERROR_INVAID_FORMAT)
@@ -48,17 +48,17 @@ def init():
     while True:
         try:
             # デフォルト値は4月〜9月の間なら1、そうでなければ2
-            default_ordinal_str = get_default_ordinal_str(soukaiInfo.date.month)
+            default_ordinal_str = get_default_ordinal_str(soukai_info.date.month)
             input_str = input(msg.ORDINAL_INPUT_GUIDE(default_ordinal_str)) or default_ordinal_str
-            soukaiInfo.ordinal = int(input_str)
-            if is_correct_ordinal(soukaiInfo.ordinal):
+            soukai_info.ordinal = int(input_str)
+            if is_correct_ordinal(soukai_info.ordinal):
                 # 結果表示
                 print(msg.DELETE_LAST_LINE)
-                print(msg.ORDINAL_INPUT_GUIDE(default_ordinal_str) + str(soukaiInfo.ordinal))
+                print(msg.ORDINAL_INPUT_GUIDE(default_ordinal_str) + str(soukai_info.ordinal))
 
-                soukaiInfo.ordinal_kanji = get_ordinal_kanji(soukaiInfo.ordinal)
-                soukaiInfo.semester = get_semester(soukaiInfo.ordinal)
-                soukaiInfo.repo_name = get_repo_name(soukaiInfo.fiscal_year, soukaiInfo.ordinal)
+                soukai_info.ordinal_kanji = get_ordinal_kanji(soukai_info.ordinal)
+                soukai_info.semester = get_semester(soukai_info.ordinal)
+                soukai_info.repo_name = get_repo_name(soukai_info.fiscal_year, soukai_info.ordinal)
                 break
             else:
                 print(msg.ERROR_NOT_1_OR_2)
@@ -73,23 +73,23 @@ def init():
     readme_template = env.get_template(config.README_TEMPLATE)
     # 書き込み
     with open(config.README_PATH, mode='w') as readme:
-        readme.write(readme_template.render(info=soukaiInfo))
+        readme.write(readme_template.render(info=soukai_info))
 
     # document.texの生成
     document_tex_template = env.get_template(config.DOCUMENT_TEX_TEMPLATE)
     #書き込み
     with open(config.DOCUMENT_TEX_PATH, mode='w') as document_tex:
-        document_tex.write(document_tex_template.render(info=soukaiInfo))
+        document_tex.write(document_tex_template.render(info=soukai_info))
 
     # 不要ファイルの削除
-    for file_name in config.REMOVE_FILES[soukaiInfo.ordinal]:
+    for file_name in config.REMOVE_FILES[soukai_info.ordinal]:
         os.remove(file_name)
 
     # 担当者のyamlテンプレートファイルを生成
     assignee_tamplate = env.get_template(config.ASSIGNEE_TEMPLATE)
     # 書き込み
     with open(config.ASSIGNEE_PATH, mode='w') as assignee:
-        assignee.write(assignee_tamplate.render(info=soukaiInfo))
+        assignee.write(assignee_tamplate.render(info=soukai_info))
 
 def is_correct_ordinal(ordinal: int) -> bool:
     return ordinal in [1, 2]
