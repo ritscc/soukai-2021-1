@@ -1,4 +1,4 @@
-{% if is_newfile %}\subsection*{% raw %}{{% endraw %}{{ title }}{% raw %}}{% endraw %}{% endif %}
-
+{% if is_newfile %}\subsection*{% raw %}{{% endraw %}{{ title }}{% raw %}}{% endraw %}
+{% endif %}
 {% for position in positions %}%\writtenBy{% raw %}{{% endraw %}{{ position }}{% raw %}}{{% endraw %}{{ assignee.family }}{% raw %}}{{% endraw %}{{ assignee.name }}{% raw %}}{% endraw %}
 {% endfor %}
