@@ -1,9 +1,6 @@
 import unittest
-import sys
 
-sys.path.append('..')
-
-import setup_init
+from setup import setup_init
 
 # setup_init.pyのテストコード
 
