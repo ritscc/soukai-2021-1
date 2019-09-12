@@ -23,5 +23,4 @@ REMOVE_FILES: dict = {
 }
 
 # Gitlab API類
-BASE_URI: str = 'https://gitlab.com/api/v4'
-POST_ISSUE_URI: str = ''
+GITLAB_BASE_URI: str = 'https://gitlab.com/api/v4'

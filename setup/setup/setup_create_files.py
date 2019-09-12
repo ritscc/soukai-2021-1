@@ -7,11 +7,12 @@ from setup import assignees
 from setup.assignees import ArticleInfo
 from setup import setup_config as config
 from setup import setup_msg as msg
+from setup import create_util as util
 
 # yamlの情報からファイルを生成
 def create_files(*args) -> None:
     for path, assignee_info in assignees.assignees().items():
-        if is_target_path(path, *args):
+        if util.is_target_path(path, *args):
             create_file(path, assignee_info)
 
 # texファイルを生成
@@ -57,11 +58,6 @@ def create_file(filepath: str, info: ArticleInfo) -> None:
         print(msg.ERROR_UNSUPPORTED_FILE_PATH)
         return
 
-def is_target_path(target_path: str, *input_path) -> bool:
-    if len(input_path) == 0:
-        return True
-    return target_path.startswith(get_root_ignore_path(path.join(*input_path)))
-
 # パスがサブセクションに相当するものか
 def is_subsection_path(path: str) -> bool:
     return re.match(r'^([^/]+)/([^/]+)/(.+)$', path) is not None
@@ -80,10 +76,6 @@ def get_positions(section: str = None) -> list:
         return config.KAISEI_COMMANDS
     else:
         return ['\president', '\subPresident'] + config.KAISEI_COMMANDS
-
-# src以下のファイルパスを取得
-def get_root_ignore_path(path: str) -> str:
-    return re.sub(r'^(\./)?src/', '', path)
 
 # サブセクションに相当するパスからセクションを取得
 def get_section_from_subsection_path(path: str) -> str:
