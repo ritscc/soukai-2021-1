@@ -3,6 +3,7 @@ import sys
 
 from setup import setup_init as init
 from setup import setup_create_files as create_files
+from setup import setup_create_issues as create_issues
 from setup import setup_msg as msg
 
 def print_help():
@@ -23,7 +24,7 @@ if __name__ == "__main__":
         create_files.create_files(*sl)
     elif args[1] == 'i' or args[1] == 'issue':
         sl = args[2:]
-        print('issueです')
+        create_issues.create_issues(*sl)
     else:
         print_help()
 
