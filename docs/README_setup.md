@@ -1,48 +1,60 @@
-setup.rb
+setup.py
 ===
 
 年度などの初期設定をしたり，テンプレートファイルを生成するツールです．
 soukai-templateからforkした直後や，各局のブランチを作るときに使ってください．
 
-Macではreadlineをインストールする必要があるかもしれません.
-[参考リンク](http://qiita.com/kidachi_/items/d0137d96bed9ac381fd5)
+Pythonの実行環境は`ver 3.7`です．
+
+Pythonが標準でインストールしていないライブラリがあるので，以下のライブラリをインストールしてください．
+  - jinja2
+  - pyyaml
+
+インストール方法
+```shell
+$ pip install jinja2
+$ pip install pyyaml
+```
+
+## スクリプトを実行するときの注意
+rootディレクトリにある`setup`ディレクトリに移動してから実行するようにしてください．
 
 ## セットアップ時にすること
 
 1. 全体の初期化
 2. `assignee.yml`の編集
 3. テンプレートファイルの作成
-4. Bitbucketに課題登録
+4. GitLabに課題登録
 
 ### 全体の初期化
 `document.tex`と`README.md`をその年に合わせて作成します．
 
 ```bash
-$ ruby setup.rb init
+$ python setup.py init
 ```
 
 実行すると開催年などが入力できる状態になるので，それに応じて正しい値を入力してください．
 
 ### `assignee.yml`の編集
 `assignee.yml`を編集します．
-タイトルや氏名，BitbucketIDなどを適切に記述してください．
+タイトルや氏名，GitLabIDなどを適切に記述してください．
 詳しくは「assignee.ymlについて」を見てください．
 
 ### テンプレートファイルの作成
 `assignee.yml`の内容を元にテンプレートファイルを作成します．
 
 ```
-$ ruby setup.rb generate
+$ python setup.py generate
 ```
 
 実行した後はコミットしてファイルをリポジトリに追加してください．
 詳しい使い方は「各コマンドの使い方」の「generateコマンド」を見てください．
 
-### Bitbucketに課題登録
-`assignee.yml`の内容を元にBitbucketに課題を登録します．
+### GitLabに課題登録
+`assignee.yml`の内容を元にGitLabに課題を登録します．
 
 ```
-$ ruby setup.rb issue
+$ python setup.py issue
 ```
 
 詳しい使い方は「各コマンドの使い方」の「issueコマンド」を見てください．
@@ -50,20 +62,25 @@ $ ruby setup.rb issue
 
 ## assignee.ymlについて
 章の担当者を管理するファイルです．
-テンプレートファイルの生成やBitbucketへの課題追加時に利用されます．
+テンプレートファイルの生成やGitLabへの課題追加時に利用されます．
 フォーマットは以下のようになっています．
 
-`filename: タイトル, 姓 名, BitbucketID`
+`filename:タイトル,姓 名,GitLabID`
+
+フォーマットの注意点
+- カンマの後ろにはスペースを入れないようにしてください．
+- 姓と名の間は**半角スペース**を入れてください．
+- GitLabIDは半角数字から構成されています．GitLabユーザの「設定」画面の「User ID」に記載されています．
 
 YAMLファイルは以下のようなフォーマットで記述します．
 YAMLのハッシュのキーはディレクトリ構造と一致するように記述してください．
-`filename`の先頭に数字を入れることで，pdfにした時の順番を制御することができます．
+`filename`の先頭に数字を入れることで，pdfにした時の順番を制御することができます．数字が一桁のときは先頭に0をつけてください．
 
 ```yaml
 soukatsu:
   zentai:
-    1_zentai: 後期活動総括, RCC 会長, cc
-    2_unei: 運営総括, RCC 副会長, cc
+    01_zentai: 後期活動総括,RCC 会長,114514
+    02_unei: 運営総括,RCC 副会長,1919810
 ```
 
 例えば，全体総括の中に学園祭総括を追加したい場合は以下のように編集します．
@@ -71,9 +88,9 @@ soukatsu:
 ```yaml
 soukatsu:
   zentai:
-    1_zentai: 後期活動総括, RCC 会長, bitbucket_kaicho
-    2_unei: 運営総括, RCC 副会長, bitbucket_hukukaicho
-    3_gakuensai: 学園祭総括, RCC 学祭担当者, bitbucket_gakuensai
+    01_zentai: 後期活動総括,RCC 会長,114514
+    02_unei: 運営総括,RCC 副会長,1919810
+    03_gakuensai: 学園祭総括,RCC 学祭担当者,8101000
 ```
 
 ## 各コマンドの使い方
@@ -85,17 +102,9 @@ soukatsu:
 例:
 
 ```bash
-$ ruby setup.rb init
-$ ruby setup.rb I
+$ python setup.py init
+$ python setup.py I
 ```
-
-WerckerのShare Badgeが最後に聞かれます．
-Werckerで継続的インテグレーションの設定を行っている場合に利用できます．
-WerckerのShare Badge (Markdown表記) は，
-Werckerのアプリケーション別の設定ページから，
-左メニューの「Sharing」をクリックすると見つけることができます．
-Werckerをまだ使っていない場合は空欄にしておいてください．
-後からでも変更ができます．
 
 ### generateコマンド
 `assignee.yml`を読み込んで，subsection以降を書くためのテンプレートファイルを生成します．
@@ -130,21 +139,21 @@ section:
 例:
 
 ```bash
-$ ruby setup.rb generate
-$ ruby setup.rb g src/soukatsu/soumu
-$ ruby setup.rb g houshin
+$ python setup.py generate
+$ python setup.py g src/soukatsu/soumu
+$ python setup.py g houshin
 ```
 
 ### issueコマンド
-`assignee.yml`を読み込んで，Bitbucketに課題を登録します．
+`assignee.yml`を読み込んで，GitLabに課題を登録します．
 generateコマンドと同様にフィルターを指定できます．
 
 例:
 
 ```bash
-$ ruby setup.rb issue
-$ ruby setup.rb i src/soukatsu/soumu
-$ ruby setup.rb i houshin
+$ python setup.py issue
+$ python setup.py i src/soukatsu/soumu
+$ python setup.py i houshin
 ```
 
 ## 局別ブランチを作る例
@@ -176,11 +185,11 @@ soukatsu:
 
 編集が終わったらテンプレートファイルを生成しましょう．
 以下のコマンドを打って生成します．
-また，Bitbucketの課題にも追加しましょう
+また，GitLabの課題にも追加しましょう
 
 ```bash
-$ ruby setup.rb g src/soukatsu/system
-$ ruby setup.rb i src/soukatsu/system
+$ python setup.py g src/soukatsu/system
+$ python setup.py i src/soukatsu/system
 ```
 
 テンプレートの生成は完了したので，ブランチをpushします．
