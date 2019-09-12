@@ -4,6 +4,7 @@ import re
 from jinja2 import Environment, FileSystemLoader
 
 from setup import assignees
+from setup.assignees import ArticleInfo
 from setup import setup_config as config
 from setup import setup_msg as msg
 
@@ -14,7 +15,7 @@ def create_files(*args) -> None:
             create_file(path, assignee_info)
 
 # texファイルを生成
-def create_file(filepath: str, info: assignees.ArticleInfo) -> None:
+def create_file(filepath: str, info: ArticleInfo) -> None:
     # テンプレートファイルのパスを指定
     file_loader = FileSystemLoader(config.TEMPLATE_ROOT_PATH)
     env = Environment(loader=file_loader)
@@ -29,11 +30,11 @@ def create_file(filepath: str, info: assignees.ArticleInfo) -> None:
             msg.ERROR_FILE_EXIST(subsection_filepath)
             return
 
-        positions:list = positions(section)
+        positions:list = get_positions(section)
 
         # ファイル生成
         with open(subsection_filepath, mode='w') as f:
-            f.write(tex_template.render(title=info.title, positions=positions, assignee=info.assignee, is_newfile=True))
+            f.write(tex_template.render(title=info.get_title(), positions=positions, assignee=info.get_assignee(), is_newfile=True))
 
         print(msg.CREATED_FILE_MSG(subsection_filepath))
 
@@ -44,9 +45,11 @@ def create_file(filepath: str, info: assignees.ArticleInfo) -> None:
 
         print(msg.WORNING_FILE_CHANGE(subsection_filepath))
 
+        positions:list = get_positions(type_name)
+
         # ファイルを上書き
         with open(subsection_filepath, mode='a') as f:
-            f.write(tex_template.render(title=info.title, positions=positions, assignee=info.assignee, is_newfile=False))
+            f.write(tex_template.render(title=info.get_title(), positions=positions, assignee=info.get_assignee(), is_newfile=False))
 
         print(msg.OVERWRITTEN_FILE_MSG(subsection_filepath))
 
@@ -54,17 +57,8 @@ def create_file(filepath: str, info: assignees.ArticleInfo) -> None:
         print(msg.ERROR_UNSUPPORTED_FILE_PATH)
         return
 
-# 役職リストを生成
-def positions(section: str = None) -> list:
-    if section in config.DEPARTMENTS:
-        return ['\\' + section + 'Chief', '\\' + section + 'Staff']
-    elif section == 'kaisei':
-        return config.KAISEI_COMMANDS
-    else:
-        return ['\president', '\subPresident'] + config.KAISEI_COMMANDS
-
-def is_target_path(path: str, *input_path) -> bool:
-    return path.startswith(get_root_ignore_path(path.join(*input_path)))
+def is_target_path(target_path: str, *input_path) -> bool:
+    return target_path.startswith(get_root_ignore_path(path.join(*input_path)))
 
 # パスがサブセクションに相当するものか
 def is_subsection_path(path: str) -> bool:
@@ -76,11 +70,20 @@ def is_kaisei_tex(path: str) -> bool:
 def is_hajimeni_tex(path: str) -> bool:
     return path == 'hajimeni.tex'
 
+# 役職リストを生成
+def get_positions(section: str = None) -> list:
+    if section in config.DEPARTMENTS:
+        return ['\\' + section + 'Chief', '\\' + section + 'Staff']
+    elif section == 'kaisei':
+        return config.KAISEI_COMMANDS
+    else:
+        return ['\president', '\subPresident'] + config.KAISEI_COMMANDS
+
 # src以下のファイルパスを取得
 def get_root_ignore_path(path: str) -> str:
-    return path.replace(r'^(./)?src/', '')
+    return re.sub(r'^(\./)?src/', '', path)
 
 # サブセクションに相当するパスからセクションを取得
 def get_section_from_subsection_path(path: str) -> str:
     result = re.search(r'/[^/]+/', path)
-    return result.group(0)
+    return re.search(r'[^/]+', result.group(0)).group(0)
