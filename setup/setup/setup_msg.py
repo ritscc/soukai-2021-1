@@ -69,6 +69,12 @@ def ERROR_HTTP_REQUEST_FAILED(code: int, reason: str, message: str) -> str:
         FontColors.RESET
     return error_msg
 
+def ERROR_MISSING_GITLAB_ID(filepath: str) -> str:
+    error_msg: str = FontColors.RED + \
+        '[ ' + filepath + ' ] missing GitLab ID.' +\
+        FontColors.RESET
+    return error_msg
+
 def WORNING_FILE_CHANGE(file_name: str) -> str:
     worning_msg: str = FontColors.YELLOW + \
         'worning: ' + file_name + ' will be changed.' + \

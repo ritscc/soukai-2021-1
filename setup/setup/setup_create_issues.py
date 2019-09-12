@@ -47,11 +47,15 @@ def create_issues(*args) -> None:
     # 入力されたpathを元にissueを発行していく
     for path, assignee_info in assignees.assignees().items():
         if util.is_target_path(path, *args):
-            create_issue(path, assignee_info, project_id, private_token)
+            create_issue(path, assignee_info, project_id, private_token, created_issue_titles)
 
 def create_issue(filepath: str, info: ArticleInfo, project_id: int, private_token: str,\
       created_issue_titles: list) -> None:
     assignee: Assignee = info.get_assignee()
+
+    if assignee.get_gitlab_id() is None:
+        print(msg.ERROR_MISSING_GITLAB_ID(filepath))
+        return
 
     # 情報をセットする
     title: str = filepath + ':' + info.get_title()
@@ -70,7 +74,7 @@ def create_issue(filepath: str, info: ArticleInfo, project_id: int, private_toke
 # 既に作られたissueを取得します
 def get_already_created_issues(project_id: int, private_token: str) -> list:
     # refs https://docs.gitlab.com/ee/api/issues.html#list-project-issues
-    get_issues_uri: str = config.GITLAB_BASE_URI + '/projects/' + str(project_id) + 'issues'
+    get_issues_uri: str = config.GITLAB_BASE_URI + '/projects/' + str(project_id) + '/issues'
 
     headers: dict = {
         'PRIVATE-TOKEN': private_token
@@ -86,14 +90,16 @@ def get_already_created_issues(project_id: int, private_token: str) -> list:
     except http_error.HTTPError as err :
         err_body: dict = json.load(err)
         print(msg.ERROR_HTTP_REQUEST_FAILED(err.code, err.reason, err_body['message']))
+        exit()
 
     except http_error.URLError as err:
         print(msg.ERROR_UNEXPECTED_ERROR)
+        exit()
 
 # gitlabにissueを新規作成します
 def post_issue(project_id: int, private_token: str, title: str, description: str, assignee_id: str) -> str:
     # refs https://docs.gitlab.com/ee/api/issues.html#new-issue
-    post_issue_uri: str = config.GITLAB_BASE_URI + '/projects/' + str(project_id) + 'issues'
+    post_issue_uri: str = config.GITLAB_BASE_URI + '/projects/' + str(project_id) + '/issues'
 
     query: dict = {
         'title': title,
@@ -114,9 +120,11 @@ def post_issue(project_id: int, private_token: str, title: str, description: str
     except http_error.HTTPError as err :
         err_body: dict = json.load(err)
         print(msg.ERROR_HTTP_REQUEST_FAILED(err.code, err.reason, err_body['message']))
+        exit()
 
     except http_error.URLError as err:
         print(msg.ERROR_UNEXPECTED_ERROR)
+        exit()
 
 # 取得されたissueからtitleだけを取り出します
 def get_created_issue_titles(issues: list) -> list:
