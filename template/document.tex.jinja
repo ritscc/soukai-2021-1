@@ -1,0 +1,29 @@
+\documentclass[a4j,titlepage]{jarticle}
+
+\input{tex-commands/root.tex}
+\texCommandsRoot{tex-commands}
+\inputCommandsAll
+
+\year{% raw %}{{% endraw %}{{ info.fiscal_year }}{% raw %}}{% endraw %}
+\month{% raw %}{{% endraw %}{{ info.date.month }}{% raw %}}{% endraw %}
+\day{% raw %}{{% endraw %}{{ info.date.day }}{% raw %}}{% endraw %}
+
+{{ info.semester }}
+%\zenki
+%\kouki
+
+\titles
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\contents
+
+\newpage
+% RCC規約
+\input{constitution/src/kiyaku.tex}
+
+\end{document}
