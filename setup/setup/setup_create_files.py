@@ -10,7 +10,7 @@ from setup import setup_msg as msg
 
 # yamlの情報からファイルを生成
 def create_files(*args) -> None:
-    for path, assignee_info in assignees.assignees():
+    for path, assignee_info in assignees.assignees().items():
         if is_target_path(path, *args):
             create_file(path, assignee_info)
 
@@ -27,7 +27,7 @@ def create_file(filepath: str, info: ArticleInfo) -> None:
 
         # ファイルがあれば何もしない
         if path.exists(subsection_filepath):
-            msg.ERROR_FILE_EXIST(subsection_filepath)
+            print(msg.ERROR_FILE_EXIST(subsection_filepath))
             return
 
         positions:list = get_positions(section)
@@ -58,6 +58,8 @@ def create_file(filepath: str, info: ArticleInfo) -> None:
         return
 
 def is_target_path(target_path: str, *input_path) -> bool:
+    if len(input_path) == 0:
+        return True
     return target_path.startswith(get_root_ignore_path(path.join(*input_path)))
 
 # パスがサブセクションに相当するものか

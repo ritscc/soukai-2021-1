@@ -65,7 +65,7 @@ class ArticleInfo:
 def assignees() -> dict:
     # yamlのロード
     with open(config.ASSIGNEE_PATH) as f:
-        yml = yaml.load(f)
+        yml = yaml.load(f, Loader=yaml.FullLoader)
 
     assignee_list: dict = create_type_assignees_data(yml)
 

@@ -113,6 +113,19 @@ class SetupCreateFilesTest(unittest.TestCase):
             with self.subTest(type_name=type_name, section=section, target_path=target_path):
                 self.assertFalse(create_files.is_target_path(target_path, type_name, section))
 
+    def test_correct_is_target_path_with_no_args(self):
+        target_pathes = [
+            'hajimeni.tex',
+            'soukatsu/1kai.tex',
+            'soukatsu/system/1_zentai.tex',
+            'houshin/1kai.tex',
+            'houshin/system/1_zentai.tex',
+        ]
+        for target_path in target_pathes:
+            with self.subTest(target_path=target_path):
+                self.assertTrue(create_files.is_target_path(target_path, *[]))
+
+
     def test_correct_is_subsection_path(self):
         for path in ['soukatsu/zentai/1_soukatsu', 'houshin/soumu/1_zentai']:
             with self.subTest(path=path + '.tex'):
