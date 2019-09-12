@@ -22,5 +22,4 @@ make_check:
     refs:
       - merge_requests
   script:
-    - ptex2pdf -l -ot -kanji=utf8 -synctex=1 document.tex
-    - cat document.log
+    - ptex2pdf -interaction=nonstopmode -l -ot -kanji=utf8 -synctex=1 document.tex || return -1
