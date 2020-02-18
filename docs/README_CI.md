@@ -47,65 +47,21 @@ Value : ritsccアカウントのアカウントID
 
 を設定してください。
 
-3. Complete!
+3. 使用するunagiのコミットハッシュを設定(optional)
+[unagi](https://gitlab.com/ritscc/soukai/unagi)は`tools/clone_unagi.sh`によってcloneされます。  
+CIでunagiのmaster最新コミット**以外**の状態を使用したい場合は、手順2と同様に
+
+```
+Key : UNAGI\_COMMIT
+Value : 対象コミットハッシュ(例:f6e2a1b2)
+```
+
+を設定してください。masterの最新コミットを使用する場合はこの手順を読み飛ばせます。
+
+4. Complete!
 
 なお，最新のSetup方法に関しては，必ず文章校正ツールであるunagiの(README)[https://gitlab.com/ritscc/soukai/unagi/-/blob/master/README.md]を確認し，
 その手順に進めることをおすすめします．
-
-執筆作業中のunagi更新について
----------------------
-GitLab Pipelinesは，ブランチに存在する`.gitlab-ci.yml`を参照しながら実行されます．
-そのため，一度執筆作業が開始された後には原則更新をかけることができないので注意してください．
-
-しかしながら，世の中そんなに甘くなく途中で更新したい時があると思いますので，手順を記しておきます．
-
-### 作業手順
-1. developブランチから新規にブランチを切る
-2. `.gitmodules`を以下の内容に書き換える
-
-```
-[submodule "constitution"]
-	path = constitution
-	url = git@gitlab.com:ritscc/soukai/constitution.git
-[submodule "tex-commands"]
-	path = tex-commands
-	url = git@gitlab.com:ritscc/soukai/tex-commands.git
-[submodule "unagi"]
-	path = unagi
-	url = git@gitlab.com:ritscc/soukai/unagi.git
-```
-
-3. 以下のコマンドを実行する
-
-```
-git submodule init
-git submodule update --remote
-```
-
-4. `.gitmodules`を以下の内容に書き換える
-
-```
-[submodule "constitution"]
-	path = constitution
-	url = ../../constitution.git
-	# url = git@gitlab.com:ritscc/soukai/constitution.git
-	branch = master
-[submodule "tex-commands"]
-	path = tex-commands
-	url = ../../tex-commands.git
-	# url = git@gitlab.com:ritscc/soukai/tex-commands.git
-	branch = master
-[submodule "unagi"]
-	path = unagi
-	url = ../../unagi.git
-	# url = git@gitlab.com:ritscc/soukai/unagi.git
-	branch = master
-```
-
-5. commit後pushする．
-6. マージリクエストを立て，正しく更新されているか確認する．
-7. developブランチにマージする．
-8. 【会員に対し】新規にブランチを切る前に`git pull`を行うように指示する．
 
 
 カスタマイズ
