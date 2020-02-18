@@ -17,6 +17,12 @@ do
         else
             # input文を生成 (シェルによって\\\\が\\となり、正規表現で\\は\を表す)
             doc=`echo "${files}" | sed -e 's/^/\\\\input{/' | sed -e 's/$/}/'`
+
+            # texファイルが発見できなければ虚無を
+            if [[ $files == '' ]]; then
+                doc=''
+            fi
+
             # 書き込む
             echo "${doc}" > src/${type}/${section}.tex
         fi
