@@ -17,14 +17,14 @@
 2. 自身のターミナルで `soukai-template` フォルダがあるディレクトリに移動してください．
 3. `$ cp -r soukai-template soukai-{年度}-{回数}` を実行してください． (e.g.) `cp -r soukai-template soukai-2019-2`
 4. コピーした先のディレクトリに移動してください．
-5. `$ git remote` を実行して `origin` が表示されていることを確認してください．
+5. `$ git remote -v` を実行して `origin` が表示されていることを確認してください．
 6. `$ git remote rm origin` を実行してください．
-7. `$ git remote` を実行して何も表示されないことを確認してください．
+7. `$ git remote -v` を実行して何も表示されないことを確認してください．
 8. [GitLab](https://gitlab.com/ritscc/soukai) にアクセスして新しいリポジトリを作成してください．
 名前は `soukai-{年度}-{回数}` としましょう．
 9. `$ git remote add origin git@gitlab.com:ritscc/soukai/{年度}/soukai-{年度}-{回数}.git` を実行します．
 (e.g.) `git remote add origin git@gitlab.com:ritscc/soukai/2019/soukai-2019-1.git`
-10. `$ git remote` を実行して `origin` が表示されていることを確認してください．
+10. `$ git remote -v` を実行して `origin` が表示されていることを確認してください．
 11. `$ git push -u origin master` を実行してください．
 12. GitLab上でリポジトリが更新されたことを確認します．
 13. `$ mv .gitlab-ci.yml.sample .gitlab-ci.yml` を実行します．
