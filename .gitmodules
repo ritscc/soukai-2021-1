@@ -1,8 +1,0 @@
-[submodule "constitution"]
-	path = constitution
-	url = ../../constitution.git
-	# url = git@gitlab.com:ritscc/soukai/constitution.git
-[submodule "tex-commands"]
-	path = tex-commands
-	url = ../../tex-commands.git
-	# url = git@gitlab.com:ritscc/soukai/tex-commands.git
