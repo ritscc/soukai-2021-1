@@ -12,7 +12,8 @@ regex:
     refs:
       - merge_requests
   script:
-    - apk add bash curl jq grep
+    - apk add bash git curl jq grep
+    - tools/clone_unagi.sh
     - unagi/ci-scripts/note_regex.sh
 
 make_check:
@@ -22,6 +23,7 @@ make_check:
     refs:
       - merge_requests
   script:
-    - apk add bash
+    - apk add bash git
+    - tools/clone_modules.sh
     - tools/auto_input.sh
     - ptex2pdf -interaction=nonstopmode -l -ot -kanji=utf8 -synctex=1 document.tex || return -1
