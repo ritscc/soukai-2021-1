@@ -31,8 +31,6 @@ def create_issues(*args) -> None:
         except:
             print(msg.ERROR_NOT_NUMBER)
 
-    print(organization_name)
-
     # ProjectのIDを取得
     while True:
         try:
