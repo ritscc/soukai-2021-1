@@ -12,12 +12,12 @@ from setup import setup_msg as msg
 
 #yamlの情報からissueを作成
 def create_issues(*args) -> None:
-    print(msg.GITLAB_INFO_INPUT_GUIDE)
+    print(msg.GITHUB_INFO_INPUT_GUIDE)
 
     # ProjectのIDを取得
     while True:
         try:
-            project_id: int = int(input(msg.REPOSITORY_ID_INPUT_GUIDE))
+            project_id: str = str(input(msg.REPOSITORY_ID_INPUT_GUIDE))
 
             # 結果表示
             print(msg.DELETE_LAST_LINE)
@@ -49,19 +49,19 @@ def create_issues(*args) -> None:
         if util.is_target_path(path, *args):
             create_issue(path, assignee_info, project_id, private_token, created_issue_titles)
 
-def create_issue(filepath: str, info: ArticleInfo, project_id: int, private_token: str,\
+def create_issue(filepath: str, info: ArticleInfo, project_id: str, private_token: str,\
       created_issue_titles: list) -> None:
     assignee: Assignee = info.get_assignee()
 
-    if assignee.get_gitlab_id() is None:
-        print(msg.ERROR_MISSING_GITLAB_ID(filepath))
+    if assignee.get_github_id() is None:
+        print(msg.ERROR_MISSING_GITHUB_ID(filepath))
         return
 
     # 情報をセットする
     title: str = filepath + ':' + info.get_title()
     description: str = '担当者は、' + assignee.get_family() + ' ' + assignee.get_name() + 'さんです。\n' +\
         'src/' + filepath + 'を編集してください。'
-    assignee_id: str = assignee.get_gitlab_id()
+    assignee_id: str = assignee.get_github_id()
 
     # 既にissueが作られていたらworningを出して終了
     if is_issue_already_created(title, created_issue_titles):
@@ -72,12 +72,12 @@ def create_issue(filepath: str, info: ArticleInfo, project_id: int, private_toke
     print(msg.CREATED_ISSUE_MSG(result_title))
 
 # 既に作られたissueを取得します
-def get_already_created_issues(project_id: int, private_token: str) -> list:
-    # refs https://docs.gitlab.com/ee/api/issues.html#list-project-issues
-    get_issues_uri: str = config.GITLAB_BASE_URI + '/projects/' + str(project_id) + '/issues'
+def get_already_created_issues(project_id: str, private_token: str) -> list:
+    # refs https://developer.github.com/v3/issues/#list-repository-issues
+    get_issues_uri: str = config.GITHUB_BASE_URI + '/repos/ritscc/' + str(project_id) + '/issues'
 
     headers: dict = {
-        'PRIVATE-TOKEN': private_token
+        'Authorization': 'token ' + private_token
     }
 
     req = request.Request(get_issues_uri, headers=headers, method='GET')
@@ -96,19 +96,19 @@ def get_already_created_issues(project_id: int, private_token: str) -> list:
         print(msg.ERROR_UNEXPECTED_ERROR)
         exit()
 
-# gitlabにissueを新規作成します
-def post_issue(project_id: int, private_token: str, title: str, description: str, assignee_id: str) -> str:
-    # refs https://docs.gitlab.com/ee/api/issues.html#new-issue
-    post_issue_uri: str = config.GITLAB_BASE_URI + '/projects/' + str(project_id) + '/issues'
+# GitHubにissueを新規作成します
+def post_issue(project_id: str, private_token: str, title: str, description: str, assignee_id: str) -> str:
+    # refs https://developer.github.com/v3/issues/#create-an-issue
+    post_issue_uri: str = config.GITHUB_BASE_URI + '/repos/ritscc/' + str(project_id) + '/issues'
 
     query: dict = {
         'title': title,
-        'description': description,
-        'assignee_ids': assignee_id
+        'body': description,
+        'assignees': assignee_id
     }
 
     headers: dict = {
-        'PRIVATE-TOKEN': private_token
+        'Authorization': 'token ' + private_token
     }
 
     req = request.Request(get_uri_with_query(post_issue_uri, query), headers=headers, method='POST')

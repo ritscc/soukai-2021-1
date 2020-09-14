@@ -22,5 +22,5 @@ REMOVE_FILES: dict = {
     2: ('../src/houshin/1kai.tex', '../src/soukatsu/4kai.tex', '../src/zenki.tex')
 }
 
-# Gitlab API類
-GITLAB_BASE_URI: str = 'https://gitlab.com/api/v4'
+# GitHub API類
+GITHUB_BASE_URI: str = 'https://api.github.com/'

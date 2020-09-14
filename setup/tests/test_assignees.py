@@ -206,4 +206,4 @@ class AssigneesTest(unittest.TestCase):
     def Assignee_assertEqual(self, first: Assignee, second: Assignee, msg=None):
         self.assertEqual(first.family, second.family)
         self.assertEqual(first.name, second.name)
-        self.assertEqual(first.gitlab_id, second.gitlab_id)
+        self.assertEqual(first.github_id, second.github_id)

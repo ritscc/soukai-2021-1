@@ -149,7 +149,7 @@ class SetupCreateIsuuesTest(unittest.TestCase):
         self.assertEqual(issue_titles, create_issues.get_created_issue_titles(issues))
 
     def test_get_uri_with_query(self):
-        uri: str = config.GITLAB_BASE_URI + '/projects/114514/issues'
+        uri: str = config.GITHUB_BASE_URI + '/projects/114514/issues'
         query: dict = {
             'title': 'title',
             'description': 'description',

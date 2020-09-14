@@ -69,9 +69,9 @@ def ERROR_HTTP_REQUEST_FAILED(code: int, reason: str, message: str) -> str:
         FontColors.RESET
     return error_msg
 
-def ERROR_MISSING_GITLAB_ID(filepath: str) -> str:
+def ERROR_MISSING_GITHUB_ID(filepath: str) -> str:
     error_msg: str = FontColors.RED + \
-        '[ ' + filepath + ' ] missing GitLab ID.' +\
+        '[ ' + filepath + ' ] missing GitHub ID.' +\
         FontColors.RESET
     return error_msg
 
@@ -87,8 +87,8 @@ def WORNING_ISSUE_DUPLICATED(title: str) -> str:
         FontColors.RESET
     return worning_msg
 
-GITLAB_INFO_INPUT_GUIDE: str = 'Please type these infomations in order to create issues on GitLab:'
-REPOSITORY_ID_INPUT_GUIDE: str = 'Project(Repository) ID (number) : '
+GITHUB_INFO_INPUT_GUIDE: str = 'Please type these infomations in order to create issues on GitHub:'
+REPOSITORY_ID_INPUT_GUIDE: str = 'Repository Name : '
 PRIVATE_TOKEN_INPUT_GUIDE: str = 'PRIVATE-TOKEN (string) : '
 
 def MEETING_DAY_INPUT_GUIDE(default_date_str: str) -> str:
