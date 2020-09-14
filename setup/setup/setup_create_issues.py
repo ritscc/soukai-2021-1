@@ -14,6 +14,25 @@ from setup import setup_msg as msg
 def create_issues(*args) -> None:
     print(msg.GITHUB_INFO_INPUT_GUIDE)
 
+    # Organization Nameを取得
+    while True:
+        try:
+            organization_name: str = str(input(msg.ORGANIZATION_NAME_INPUT_GUIDE))
+
+            # 結果表示
+            print(msg.DELETE_LAST_LINE)
+            print(msg.ORGANIZATION_NAME_INPUT_GUIDE + str(organization_name))
+            
+            # 未入力時デフォルト設定
+            if organization_name == '':
+                organization_name: str = config.GITHUB_BASE_ORGANIZATION
+            
+            break
+        except:
+            print(msg.ERROR_NOT_NUMBER)
+
+    print(organization_name)
+
     # ProjectのIDを取得
     while True:
         try:
@@ -41,15 +60,15 @@ def create_issues(*args) -> None:
         print(msg.ERROR_INPUT_EMPTY)
 
     # 既に作られたissueを取得
-    created_issues: list = get_already_created_issues(project_id, private_token)
+    created_issues: list = get_already_created_issues(organization_name, project_id, private_token)
     created_issue_titles: list = get_created_issue_titles(created_issues)
 
     # 入力されたpathを元にissueを発行していく
     for path, assignee_info in assignees.assignees().items():
         if util.is_target_path(path, *args):
-            create_issue(path, assignee_info, project_id, private_token, created_issue_titles)
+            create_issue(path, assignee_info, organization_name, project_id, private_token, created_issue_titles)
 
-def create_issue(filepath: str, info: ArticleInfo, project_id: str, private_token: str,\
+def create_issue(filepath: str, info: ArticleInfo, organization_name: str, project_id: str, private_token: str,\
       created_issue_titles: list) -> None:
     assignee: Assignee = info.get_assignee()
 
@@ -68,13 +87,13 @@ def create_issue(filepath: str, info: ArticleInfo, project_id: str, private_toke
         print(msg.WORNING_ISSUE_DUPLICATED(title))
         return
 
-    result_title: str = post_issue(project_id, private_token, title, description, assignee_id)
+    result_title: str = post_issue(organization_name,project_id, private_token, title, description, assignee_id)
     print(msg.CREATED_ISSUE_MSG(result_title))
 
 # 既に作られたissueを取得します
-def get_already_created_issues(project_id: str, private_token: str) -> list:
+def get_already_created_issues(organization_name: str, project_id: str, private_token: str) -> list:
     # refs https://developer.github.com/v3/issues/#list-repository-issues
-    get_issues_uri: str = config.GITHUB_BASE_URI + '/repos/ritscc/' + str(project_id) + '/issues'
+    get_issues_uri: str = config.GITHUB_BASE_URI + '/repos/' + str(organization_name) + '/' + str(project_id) + '/issues'
 
     headers: dict = {
         'Authorization': 'token ' + private_token
@@ -97,9 +116,9 @@ def get_already_created_issues(project_id: str, private_token: str) -> list:
         exit()
 
 # GitHubにissueを新規作成します
-def post_issue(project_id: str, private_token: str, title: str, description: str, assignee_id: str) -> str:
+def post_issue(organization_name: str, project_id: str, private_token: str, title: str, description: str, assignee_id: str) -> str:
     # refs https://developer.github.com/v3/issues/#create-an-issue
-    post_issue_uri: str = config.GITHUB_BASE_URI + '/repos/ritscc/' + str(project_id) + '/issues'
+    post_issue_uri: str = config.GITHUB_BASE_URI + '/repos/' + str(organization_name) + '/' + str(project_id) + '/issues'
 
     query: dict = {
         'title': title,
