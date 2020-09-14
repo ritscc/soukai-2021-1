@@ -121,14 +121,15 @@ def post_issue(organization_name: str, project_id: str, private_token: str, titl
     query: dict = {
         'title': title,
         'body': description,
-        'assignees': assignee_id
+        'assignee': assignee_id
     }
 
     headers: dict = {
         'Authorization': 'token ' + private_token
     }
 
-    req = request.Request(get_uri_with_query(post_issue_uri, query), headers=headers, method='POST')
+    #req = request.Request(get_uri_with_query(post_issue_uri, query), headers=headers, method='POST')
+    req = request.Request(post_issue_uri, json.dumps(query).encode(), headers=headers, method='POST')
     try:
         with request.urlopen(req) as res:
             issue: dict = json.load(res)
