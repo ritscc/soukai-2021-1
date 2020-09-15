@@ -91,7 +91,7 @@ def create_issue(filepath: str, info: ArticleInfo, organization_name: str, proje
 # 既に作られたissueを取得します
 def get_already_created_issues(organization_name: str, project_id: str, private_token: str) -> list:
     # refs https://developer.github.com/v3/issues/#list-repository-issues
-    get_issues_uri: str = config.GITHUB_BASE_URI + '/repos/' + str(organization_name) + '/' + str(project_id) + '/issues'
+    get_issues_uri: str = config.GITHUB_BASE_URI + '/repos/' + str(organization_name) + '/' + str(project_id) + '/issues?per_page=200'
 
     headers: dict = {
         'Authorization': 'token ' + private_token
