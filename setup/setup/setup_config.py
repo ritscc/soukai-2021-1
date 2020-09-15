@@ -24,4 +24,4 @@ REMOVE_FILES: dict = {
 
 # GitHub API類
 GITHUB_BASE_URI: str = 'https://api.github.com'
-GITHUB_BASE_ORGANIZATION: str = 'ritscc'
+GITHUB_ORGANIZATION: str = 'ritscc'

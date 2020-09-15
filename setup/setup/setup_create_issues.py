@@ -25,7 +25,7 @@ def create_issues(*args) -> None:
             
             # 未入力時デフォルト設定
             if organization_name == '':
-                organization_name: str = config.GITHUB_BASE_ORGANIZATION
+                organization_name: str = config.GITHUB_ORGANIZATION
             
             break
         except:
