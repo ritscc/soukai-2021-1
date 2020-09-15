@@ -1,0 +1,6 @@
+name: 'LaTex Build Action'
+description: 'LaTex build action for soukai-template.'
+author: 'greenlaver'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

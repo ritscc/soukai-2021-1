@@ -1,0 +1,66 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Unagi
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    # Runs only newly opend or pushed updating commit (NOT reopened)
+    # ref : https://qiita.com/osakiy/items/27d5382e41107de482a4
+    types: [opened, synchronize]
+    paths: '**.tex'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  linter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          # Fetch all branches
+          fetch-depth: 0
+      
+      # Checkout unagi
+      - name: Clone unagi
+        uses: actions/checkout@v2
+        with:
+          repository: ritscc/unagi
+          path: unagi
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      # Extract changed tex files list from git diff
+      - name: Extract changed tex files
+        id: target-files
+        run: |
+          targets=$(git diff origin/${GITHUB_BASE_REF}..origin/${GITHUB_HEAD_REF} \
+          --diff-filter=AM --name-only -- '*.tex')
+          echo ::set-output name=targets::${targets}
+
+      # Execute Unagi core script to generate linter PR message
+      - name: Unagi core
+        id: unagi-core
+        run: |
+          message_file=/tmp/pr_message          
+          unagi/core/unagi.sh ${{ steps.target-files.outputs.targets }} > ${message_file}
+          echo ::set-output name=message::${message_file}
+
+      # Update or Insert PR message
+      - name: Upsert linter result comment on PR
+        if: steps.unagi-core.outputs.message
+        uses: marocchino/sticky-pull-request-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ steps.unagi-core.outputs.message }}
+      
+      # Allow PR not appears 'no_entry_sign' and 'collision' in message
+      - name: Check linter allowed PR or not
+        run: |
+          ! grep 'no_entry_sign' ${{ steps.unagi-core.outputs.message }} && \
+          ! grep 'collision' ${{ steps.unagi-core.outputs.message }}
+          exit $?
