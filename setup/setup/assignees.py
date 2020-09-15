@@ -7,24 +7,24 @@ import re
 from setup import setup_config as config
 
 class Assignee:
-    def __init__(self, gitlab_id: str = None, family: str = '姓', name: str = '名'):
-        self.gitlab_id: str = gitlab_id
+    def __init__(self, github_id: str = None, family: str = '姓', name: str = '名'):
+        self.github_id: str = github_id
         self.family: str = family
         self.name: str = name
 
     def __str__(self):
-        return 'family: ' + self.family + ' name: ' + self.name + ' gitlab_id: ' + str(self.gitlab_id)
+        return 'family: ' + self.family + ' name: ' + self.name + ' github_id: ' + str(self.github_id)
 
     def __eq__(self, value):
         return self.family == value.family and\
             self.name == value.name and\
-            self.gitlab_id == self.gitlab_id
+            self.github_id == self.github_id
 
-    def get_gitlab_id(self) -> str:
-        return self.gitlab_id
+    def get_github_id(self) -> str:
+        return self.github_id
 
-    def set_gitlab_id(self, gitlab_id: str) -> None:
-        self.gitlab_id = gitlab_id
+    def set_github_id(self, github_id: str) -> None:
+        self.github_id = github_id
 
     def get_family(self) -> str:
         return self.family
@@ -105,7 +105,7 @@ def create_subsection_assignees_data(\
 
     return assignee_list
 
-# タイトル,氏名,GitLab IDをArticleInfoクラスに変換します
+# タイトル,氏名,GitHub IDをArticleInfoクラスに変換します
 def parse_assignee(assignee_data: str) -> ArticleInfo:
     result: ArticleInfo = ArticleInfo(assignee=Assignee())
 
@@ -115,9 +115,9 @@ def parse_assignee(assignee_data: str) -> ArticleInfo:
     elif len(parsed_data) == 2:
         parsed_data += [None]
 
-    title, full_name, gitlab_id = parsed_data
+    title, full_name, github_id = parsed_data
     result.set_title(title)
-    result.get_assignee().set_gitlab_id(gitlab_id)
+    result.get_assignee().set_github_id(github_id)
 
     if is_not_full_name_none(full_name):
         family, name = full_name.split(' ')

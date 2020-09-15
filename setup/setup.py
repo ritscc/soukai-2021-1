@@ -27,4 +27,3 @@ if __name__ == "__main__":
         create_issues.create_issues(*sl)
     else:
         print_help()
-
