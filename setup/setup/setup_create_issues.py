@@ -85,7 +85,7 @@ def create_issue(filepath: str, info: ArticleInfo, organization_name: str, proje
         print(msg.WORNING_ISSUE_DUPLICATED(title))
         return
 
-    result_title: str = post_issue(organization_name,project_id, private_token, title, description, assignee_id)
+    result_title: str = post_issue(organization_name, project_id, private_token, title, description, assignee_id)
     print(msg.CREATED_ISSUE_MSG(result_title))
 
 # 既に作られたissueを取得します

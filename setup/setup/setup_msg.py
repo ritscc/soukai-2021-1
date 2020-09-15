@@ -89,7 +89,7 @@ def WORNING_ISSUE_DUPLICATED(title: str) -> str:
 
 GITHUB_INFO_INPUT_GUIDE: str = 'Please type these infomations in order to create issues on GitHub:'
 ORGANIZATION_NAME_INPUT_GUIDE: str = 'Organization Name (Default : ritscc) : '
-REPOSITORY_ID_INPUT_GUIDE: str = 'Repository Name : '
+REPOSITORY_NAME_INPUT_GUIDE: str = 'Repository Name : '
 PRIVATE_TOKEN_INPUT_GUIDE: str = 'TOKEN (string) : '
 
 def MEETING_DAY_INPUT_GUIDE(default_date_str: str) -> str:
