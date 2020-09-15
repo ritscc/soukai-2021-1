@@ -167,4 +167,3 @@ class SetupCreateIsuuesTest(unittest.TestCase):
         issue_titles: list = ['soukatsu/system/1_zentai.tex:全体総括', 'houshin/4kai.tex:4回生方針', 'hajimeni.tex:はじめに']
         title: str = 'houshin/system/1_zentai.tex:全体総括'
         self.assertFalse(create_issues.is_issue_already_created(title, issue_titles))
-
