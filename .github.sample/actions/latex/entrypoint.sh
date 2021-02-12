@@ -17,7 +17,7 @@ if [ $GITHUB_BASE_REF = "master" -o $GITHUB_BASE_REF = "main" ]; then
   -X POST https://api.github.com/repos/$GITHUB_REPOSITORY/releases \
   -d "
   {
-    \"tag_name\": \"ver.${GITHUB_SHA:0:7}\",
+    \"tag_name\": \"ver.$GITHUB_RUN_NUMBER\",
     \"target_commitish\": \"$GITHUB_SHA\",
     \"name\": \"ver.$GITHUB_RUN_NUMBER\",
     \"draft\": false,
