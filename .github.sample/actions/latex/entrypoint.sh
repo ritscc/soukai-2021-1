@@ -11,15 +11,15 @@ ptex2pdf -interaction=nonstopmode -l -ot -kanji=utf8 -synctex=1 document.tex
 # -----------------------------------------------------------
 #   https://qiita.com/denkiuo604/items/137a1b3fc1955cfb9c58
 
-if [ $GITHUB_BASE_REF = "master" ]; then
+if [ $GITHUB_BASE_REF = "master" -o $GITHUB_BASE_REF = "main" ]; then
   # create release
   res=`curl -H "Authorization: token $GITHUB_TOKEN" \
   -X POST https://api.github.com/repos/$GITHUB_REPOSITORY/releases \
   -d "
   {
-    \"tag_name\": \"ver.${GITHUB_SHA:0:7}\",
+    \"tag_name\": \"ver.$GITHUB_RUN_NUMBER\",
     \"target_commitish\": \"$GITHUB_SHA\",
-    \"name\": \"ver.${GITHUB_SHA:0:7}\",
+    \"name\": \"ver.$GITHUB_RUN_NUMBER\",
     \"draft\": false,
     \"prerelease\": true
   }"`
