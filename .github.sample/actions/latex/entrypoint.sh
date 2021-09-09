@@ -5,6 +5,7 @@ set -eux
 tools/auto_input.sh
 
 # Build document.pdf
+platex document
 ptex2pdf -interaction=nonstopmode -l -ot -kanji=utf8 -synctex=1 document.tex
 
 #  Release generated PDF (only PR targeat develop or master)
