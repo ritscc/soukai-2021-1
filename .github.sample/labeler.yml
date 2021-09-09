@@ -1,0 +1,16 @@
+方針:
+  - any: ["src/houshin/**/*.tex"]
+総括:
+  - any: ["src/soukatsu/**/*.tex"]
+全体:
+  - any: ["src/**/zentai/*.tex"]
+回生:
+  - any: ["src/**/[1-4]kai.tex"]
+システム管理局:
+  - any: ["src/**/system/*.tex"]
+渉外局:
+  - any: ["src/**/syogai/*.tex"]
+研究推進局:
+  - any: ["src/**/kensui/*.tex"]
+総務局:
+  - any: ["src/**/soumu/*.tex"]
