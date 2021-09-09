@@ -46,8 +46,8 @@ soukatsu:
     02_huki: 風紀業務総括,堀田 隆成,Drunknow
     03_souzi: 掃除業務総括,堀田 隆成,Drunknow
     04_syoki: 書記業務総括,堀田 隆成,Drunknow
-    05_kainaigyozi: 会内行事総括,奥川 莞多,o-kanta
-    06_bihin: 備品業務総括,奥川 莞多,o-kanta
+    05_kainaigyozi: 会内行事総括,奥川 莞多,okgwknt
+    06_bihin: 備品業務総括,奥川 莞多,okgwknt
 houshin:
   zentai:
     01_zentai: 前期活動方針,深田 紘希,fukada6280
@@ -84,5 +84,5 @@ houshin:
     02_huki: 風紀業務方針,西村 雅貴,Husky21st
     03_souzi: 掃除業務方針,西村 雅貴,Husky21st
     04_syoki: 書記業務方針,西村 雅貴,Husky21st
-    05_kainaigyozi: 会内行事方針,奥川 莞多,o-kanta
-    06_bihin: 備品業務方針,奥川 莞多,o-kanta
+    05_kainaigyozi: 会内行事方針,奥川 莞多,okgwknt
+    06_bihin: 備品業務方針,奥川 莞多,okgwknt
